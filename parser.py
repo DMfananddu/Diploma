@@ -1,2 +1,7 @@
-inputStr = str(input.
-print(inputStr)
+# ввод текста вручную в командной строке
+inputStr = input("Введите текст, оканчивающийся символом переноса строки (или нажмите Enter): ").strip()
+
+# ввод текста чтением из файла
+
+for simbol in inputStr:    
+    print(simbol)
