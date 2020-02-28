@@ -11,7 +11,7 @@ def wordExistingCheck(buf):
     wordCount = 0
     morph = MorphAnalyzer().parse(buf)
     for i in range(len(morph)):
-        if morph[i].normal_form == buf.lower():
+        if morph[i].normal_form == buf.lower() or len(morph[i].normal_form)//len(buf.lower()) < 3:
             wordCount += 1
     return wordCount
 
