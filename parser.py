@@ -15,6 +15,34 @@ def wordExistingCheck(buf):
             wordCount += 1
     return wordCount
 
+def wordProcessing(buf):
+    if ord(buf[-1]) == 46:
+        print("точка", buf, stringList)
+        if wordExistingCheck(buf[:-1]) != 0:
+            print("слово есть", buf, stringList)
+            if len(buf[:-1]) > 1:
+                stringList.append(buf)
+                buf = ""
+            elif len(buf[:-1]) == 1 and len(stringList[-1][:-1]) == 1 and len(stringList) > 0:
+                stringList[-1] += buf
+                buf = ""
+        elif len(buf) == 1:
+            stringList[-1] += buf
+            buf = ""
+    else:
+        print("не точка", buf, stringList)
+        if wordExistingCheck(buf[:-1]) != 0 and wordExistingCheck(buf) == 0 or wordExistingCheck(buf) != 0 and len(buf) >= 1:
+            print("новое слово")
+            stringList.append(buf)
+            buf = ""
+        elif len(stringList) > 0 and wordExistingCheck(stringList[-1]) == 0:
+            stringList[-1] += buf
+            buf = ""
+        else:
+            stringList.append(buf)
+            buf = ""
+    return buf
+
 for symbol in inputStr:
     buf += symbol
     # if 48 <= ord(symbol) <= 57:
@@ -33,36 +61,10 @@ for symbol in inputStr:
         buf = buf[:-1]
         if buf == "":
             continue
-        if ord(buf[-1]) != 46:
-            print("не точка", stringList)
-            if wordExistingCheck(buf) != 0:
-                stringList.append(buf)
-                buf = ""
-        elif wordExistingCheck(buf[:-1]) != 0:
-            print("точка", stringList)
-            if len(buf) > 2:
-                stringList.append(buf)
-                buf = ""
-            elif len(buf) == 1:
-                stringList[-1] += buf
-                buf = ""
-        else:
-            if len(buf) == 1:
-                stringList[-1] += buf
-                buf = ""
+        buf = wordProcessing(buf)
 if buf != "":
-    if ord(buf[-1]) != 46 and wordExistingCheck(buf) != 0:
-        stringList.append(buf)
-        buf = ""
-    elif wordExistingCheck(buf[:-1]) != 0:
-        if len(buf) > 2:
-            stringList.append(buf)
-            buf = ""
-        elif len(buf) == 1:
-            stringList[-1] += buf
-            buf = ""
-    else:
-        if len(buf) == 1:
-            stringList[-1] += buf
-            buf = ""
+    buf = wordProcessing(buf)
+if buf != "":
+    stringList.append(buf)
+    buf = ""
 print(stringList)
