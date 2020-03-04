@@ -1,4 +1,5 @@
 from pymorphy2 import MorphAnalyzer
+from copy import deepcopy
 # ввод текста вручную в командной строке
 inputStr = input("Введите текст, оканчивающийся символом переноса строки (или нажмите Enter): ").strip("\n")
 
@@ -17,9 +18,9 @@ def wordExistingCheck(buf):
 
 def wordProcessing(buf):
     if ord(buf[-1]) == 46:
-        print("точка", buf, stringList)
+        # print("точка", buf, stringList)
         if wordExistingCheck(buf[:-1]) != 0:
-            print("слово есть", buf, stringList)
+            # print("слово есть", buf, stringList)
             if len(buf[:-1]) > 1:
                 stringList.append(buf)
                 buf = ""
@@ -30,12 +31,12 @@ def wordProcessing(buf):
             stringList[-1] += buf
             buf = ""
     else:
-        print("не точка", buf, stringList)
+        # print("не точка", buf, stringList)
         if wordExistingCheck(buf[:-1]) != 0 and wordExistingCheck(buf) == 0 or wordExistingCheck(buf) != 0 and len(buf) >= 1:
-            print("новое слово")
+            # print("новое слово")
             stringList.append(buf)
             buf = ""
-        elif len(stringList) > 0 and wordExistingCheck(stringList[-1]) == 0:
+        elif len(stringList) > 0 and wordExistingCheck(stringList[-1]) == 0 and wordExistingCheck(stringList[-1][:-1]) == 0:
             stringList[-1] += buf
             buf = ""
         else:
@@ -67,4 +68,49 @@ if buf != "":
 if buf != "":
     stringList.append(buf)
     buf = ""
+
+resultList = []
+firstLetterIndex = 0
 print(stringList)
+
+for stringElem in stringList:
+    elemLength = len(stringElem)
+    elem = deepcopy(stringElem)
+    if len(elem) != 1:
+        if 33 <= ord(elem[0]) <= 47 or 58 <= ord(elem[0]) <= 64 or \
+                91 <= ord(elem[0]) <= 96 or 123 <= ord(elem[0]) <= 127 and \
+                33 <= ord(elem[-1]) <= 47 or 58 <= ord(elem[-1]) <= 64 or \
+                91 <= ord(elem[-1]) <= 96 or 123 <= ord(elem[-1]) <= 127:
+            for i in range(elemLength-1):
+                if not (33 <= ord(elem[i]) <= 47 or 58 <= ord(elem[i]) <= 64 or 91 <= ord(elem[i]) <= 96 or 123 <= ord(elem[i]) <= 127):
+                    print(elem[i], elem)
+                    print(i, elemLength)
+                    resultList.append(elem[:i])
+                    elem = elem[i:]
+                    elemLength = len(elem)
+                    for i in range(elemLength-1, 0, -1):
+                        if not (33 <= ord(elem[i]) <= 47 or 58 <= ord(elem[i]) <= 64 or 91 <= ord(elem[i]) <= 96 or 123 <= ord(elem[i]) <= 127):
+                            resultList.append(elem[:i+1])
+                            resultList.append(elem[i+1:])
+                            break
+                    break
+        elif 33 <= ord(elem[0]) <= 47 or 58 <= ord(elem[0]) <= 64 or 91 <= ord(elem[0]) <= 96 or 123 <= ord(elem[0]) <= 127:
+            for i in range(elemLength-1):
+                if not (33 <= ord(elem[i]) <= 47 or 58 <= ord(elem[i]) <= 64 or 91 <= ord(elem[i]) <= 96 or 123 <= ord(elem[i]) <= 127):
+                    print(elem[i], elem)
+                    print(i, elemLength)
+                    resultList.append(elem[:i])
+                    resultList.append(elem[i:])
+                    break
+        elif 33 <= ord(elem[-1]) <= 47 or 58 <= ord(elem[-1]) <= 64 or 91 <= ord(elem[-1]) <= 96 or 123 <= ord(elem[-1]) <= 127:
+            for i in range(elemLength-1, 0, -1):
+                if not (33 <= ord(elem[i]) <= 47 or 58 <= ord(elem[i]) <= 64 or 91 <= ord(elem[i]) <= 96 or 123 <= ord(elem[i]) <= 127):
+                    print(elem[i], elem)
+                    resultList.append(elem[:i+1])
+                    resultList.append(elem[i+1:])
+                    break
+        else:
+            resultList.append(elem)            
+    else:
+        resultList.append(elem)
+print(resultList)
