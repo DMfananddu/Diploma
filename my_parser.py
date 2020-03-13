@@ -1,32 +1,11 @@
 from pymorphy2 import MorphAnalyzer
 from copy import deepcopy
-
-# выбор сповоба ввода текста:
-inputStr = ""
-inputFile = []
-while True:
-    choiceInputStr = input("Если хотите ввести строку текста в командной строке, введите слово 'вручную',\nесли хотите прочитать текст из файла, введите слово 'файл': ").strip("\n")
-    if choiceInputStr != "файл" and choiceInputStr != "вручную":
-        print("Пожалуйста, введите корректную инструкцию для продолжения работы.\n")
-        continue
-    elif choiceInputStr != "файл" and choiceInputStr == "вручную":
-        # ввод текста вручную в командной строке
-        inputStr = input("Введите текст, оканчивающийся символом переноса строки (или нажмите Enter): ").strip("\n")
-        break
-    else:
-        # ввод текста чтением из файла
-        inputFileName = input("Введите имя файла (полный путь/имя внутри данной директории): ").strip("\n")
-        f = open(inputFileName, encoding="UTF-8").readlines()
-        for line in f:
-            inputFile.append(line.strip("\n"))
-        print(inputFile)
-        break
-
-
-inputData = inputStr or inputFile
+from reader import gettingData
 dataWordsList = []
 
-@profile
+inputData = gettingData()
+
+# @profile
 def wordExistingCheck(buf):
     wordCount = 0
     morph = MorphAnalyzer().parse(buf)
@@ -35,7 +14,7 @@ def wordExistingCheck(buf):
             wordCount += 1
     return wordCount
 
-@profile
+# @profile
 def wordProcessing(buf, stringList):
     if ord(buf[-1]) == 46:
         # print("точка", buf, stringList)
@@ -64,7 +43,7 @@ def wordProcessing(buf, stringList):
             buf = ""
     return buf, stringList
 
-@profile
+# @profile
 def dataSlicing(inputData):
     buf = ""
     for dataStr in inputData:
@@ -100,8 +79,8 @@ resultList = []
 firstLetterIndex = 0
 print(dataWordsList)
 
-@profile
-def dataFianlPacking(dataWordsList):
+# @profile
+def dataFinalPacking(dataWordsList):
     for stringList in dataWordsList:
         for stringElem in stringList:
             elemLength = len(stringElem)
@@ -139,5 +118,5 @@ def dataFianlPacking(dataWordsList):
             else:
                 resultList.append(elem)
     return resultList
-resultList = dataFianlPacking(dataWordsList)
+resultList = dataFinalPacking(dataWordsList)
 print(resultList)
