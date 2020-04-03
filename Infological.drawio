@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-04-03T11:57:46.339Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" etag="xi4qK_79ioewSFxD5COs" version="12.9.6" type="github">
+<mxfile host="app.diagrams.net" modified="2020-04-03T11:58:39.718Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" etag="Z06scUXz5PJkIpaGrxYz" version="12.9.6" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
     <mxGraphModel dx="782" dy="-390" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -688,14 +688,14 @@
         <mxCell id="Er8K7lmykXEFfFOnpzie-213" value="Вид представлен" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1060" y="1166.5" width="120" height="59" as="geometry" />
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-214" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="Er8K7lmykXEFfFOnpzie-216">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-214" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;entryX=0.453;entryY=0.013;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Er8K7lmykXEFfFOnpzie-216" target="Er8K7lmykXEFfFOnpzie-1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1120" y="1444.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-215" value="М" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="Er8K7lmykXEFfFOnpzie-214">
           <mxGeometry x="0.3889" y="-1" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint x="0.28" y="-21.51" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-216" value="Имеет вид" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -745,14 +745,14 @@
         <mxCell id="Er8K7lmykXEFfFOnpzie-228" value="Переходность представлена" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1200" y="1166.5" width="120" height="59" as="geometry" />
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-229" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="Er8K7lmykXEFfFOnpzie-231">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-229" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;entryX=0.536;entryY=-0.012;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Er8K7lmykXEFfFOnpzie-231" target="Er8K7lmykXEFfFOnpzie-1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1260" y="1444.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-230" value="М" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="Er8K7lmykXEFfFOnpzie-229">
           <mxGeometry x="0.3889" y="-1" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint x="0.67" y="-28.01" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-231" value="Имеет переходность" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -802,14 +802,14 @@
         <mxCell id="Er8K7lmykXEFfFOnpzie-243" value="Лицо представлено" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1330" y="1170" width="140" height="48.25" as="geometry" />
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-244" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="Er8K7lmykXEFfFOnpzie-246">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-244" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;entryX=0.619;entryY=0.004;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Er8K7lmykXEFfFOnpzie-246" target="Er8K7lmykXEFfFOnpzie-1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1400" y="1445.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-245" value="М" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="Er8K7lmykXEFfFOnpzie-244">
           <mxGeometry x="0.3889" y="-1" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint x="1.06" y="-23" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-246" value="Имеет лицо" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -861,12 +861,12 @@
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-259" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="Er8K7lmykXEFfFOnpzie-261">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1540" y="1445.5" as="targetPoint" />
+            <mxPoint x="1539" y="1480" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-260" value="М" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="Er8K7lmykXEFfFOnpzie-259">
           <mxGeometry x="0.3889" y="-1" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint x="1.7" y="-21.49" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-261" value="Имеет род" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
