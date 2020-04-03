@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-04-03T09:43:39.635Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" etag="9JpnIaPapONgG_C33P3_" version="12.9.6" type="github">
+<mxfile host="app.diagrams.net" modified="2020-04-03T09:44:38.493Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" etag="TVcGNJy8wMEwMwCHFpL7" version="12.9.6" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
     <mxGraphModel dx="782" dy="-390" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -181,7 +181,7 @@
         <mxCell id="Er8K7lmykXEFfFOnpzie-53" value="Меняет" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="360" y="970" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-57" value="Правило" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-57" value="Вид синтаксической группы" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="360" y="840" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
