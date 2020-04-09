@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2020-04-09T14:24:56.624Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" etag="t414Ijk_7lQZnXcGJEeT" version="12.9.10" type="github">
+<mxfile host="app.diagrams.net" modified="2020-04-09T14:40:22.267Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" etag="PGZKPjR650ktKE0VuPL4" version="12.9.10" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
-    <mxGraphModel dx="1303" dy="-99" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1303" dy="728" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -240,16 +240,18 @@
           <mxGeometry x="380" y="980" width="80" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-57" value="Вид синтаксической группы" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="390" y="840" width="120" height="60" as="geometry" />
+          <mxGeometry x="390" y="820" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-62" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-60" target="Er8K7lmykXEFfFOnpzie-57" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-60" value="&lt;u&gt;ID вида синтаксической группы&lt;/u&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="265" y="830" width="100" height="50" as="geometry" />
+          <mxGeometry x="265" y="810" width="100" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-63" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-61" target="Er8K7lmykXEFfFOnpzie-57" edge="1">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="Er8K7lmykXEFfFOnpzie-63" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" target="Er8K7lmykXEFfFOnpzie-57" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="353.8908729652653" y="878.7867965644007" as="sourcePoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-61" value="Название вида синтаксической группы" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="260" y="890" width="110" height="60" as="geometry" />
@@ -406,7 +408,7 @@
           <mxGeometry x="1600" y="850" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-111" value="Часть речи" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="960" y="840" width="120" height="60" as="geometry" />
+          <mxGeometry x="1200" y="720" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-113" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=classic;endFill=1;" parent="1" source="Er8K7lmykXEFfFOnpzie-112" target="Er8K7lmykXEFfFOnpzie-105" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -420,16 +422,16 @@
             <mxPoint y="-30" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-114" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;" parent="1" source="Er8K7lmykXEFfFOnpzie-112" target="Er8K7lmykXEFfFOnpzie-111" edge="1">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-114" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=classic;endFill=1;" parent="1" source="Er8K7lmykXEFfFOnpzie-112" target="Er8K7lmykXEFfFOnpzie-111" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-116" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;" parent="Er8K7lmykXEFfFOnpzie-114" vertex="1" connectable="0">
           <mxGeometry x="0.325" relative="1" as="geometry">
-            <mxPoint x="10" as="offset" />
+            <mxPoint y="16.67" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-112" value="Представлена" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1200" y="840" width="120" height="60" as="geometry" />
+          <mxGeometry x="1200" y="820" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-118" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=open;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-115" target="Er8K7lmykXEFfFOnpzie-111" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -444,7 +446,7 @@
         </mxCell>
         <mxCell id="Acf67Gp8EdVM3Cdp0NT5-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;endArrow=classic;endFill=1;" parent="1" source="Er8K7lmykXEFfFOnpzie-115" edge="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="520" y="870" as="targetPoint" />
+            <mxPoint x="520" y="850" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Acf67Gp8EdVM3Cdp0NT5-5" value="М" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;" parent="Acf67Gp8EdVM3Cdp0NT5-1" vertex="1" connectable="0">
@@ -453,19 +455,19 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-115" value="Реализует&lt;br&gt;функцию" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="680" y="840" width="120" height="60" as="geometry" />
+          <mxGeometry x="680" y="820" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-124" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-122" target="Er8K7lmykXEFfFOnpzie-111" edge="1">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-124" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-122" target="Er8K7lmykXEFfFOnpzie-111" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-122" value="&lt;u&gt;ID части речи&lt;/u&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="840" y="920" width="70" height="40" as="geometry" />
+          <mxGeometry x="1360" y="730" width="70" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-125" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-123" target="Er8K7lmykXEFfFOnpzie-111" edge="1">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-125" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-123" target="Er8K7lmykXEFfFOnpzie-111" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-123" value="Название части речи" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="920" y="930" width="90" height="39" as="geometry" />
+          <mxGeometry x="1350" y="806" width="90" height="39" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-129" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-126" target="Er8K7lmykXEFfFOnpzie-105" edge="1">
           <mxGeometry relative="1" as="geometry">
