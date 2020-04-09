@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-04-09T15:23:00.974Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" etag="sNU4ytLgjYd7VfQuJx0y" version="12.9.10" type="github">
+<mxfile host="app.diagrams.net" modified="2020-04-09T15:23:15.145Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" etag="zSg9DGZ_4VhYaROBPsKm" version="12.9.10" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
     <mxGraphModel dx="1303" dy="728" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -79,7 +79,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-19" value="Имеет тип" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="400" y="1580" width="80" height="60" as="geometry" />
+          <mxGeometry x="420" y="1580" width="80" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-22" value="&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;b&gt;Тип входной синтаксической группы&lt;/b&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="557.5" y="1580" width="120" height="60" as="geometry" />
