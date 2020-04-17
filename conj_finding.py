@@ -84,20 +84,31 @@ def conjFinding(parsedText):
                                 possible_conjs.append([i, wanted_conj_kind, wanted_conj])
                                 # отдельный поиск второй части раздельно-составного союза по тому же плану
                                 if curr_conjs[i][j][1] != '':
+                                    # разыскиваемая в предложении вторая часть составного союза
                                     wanted_conj = curr_conjs[i][j][1]
+                                    # ее длина
                                     len_wanted_conj2 = len(wanted_conj)
+                                    # точка отсчёта - следующий элемент после окончания первой части составного союза
                                     k = i + len_wanted_conj1
                                     while True:
+                                        # после 1-й части должна быть лексема, поэтому наращиваем счётчик перед шагом
                                         k += 1
+                                        # если после предполагаемого союза не уместится лексем, break
                                         if k + len_wanted_conj2 >= lexem_count:
                                             break
+                                        # ключевое: перед 1-й лексемой 2-й части союза дб запятая!
                                         if s["lexems"][k]["lexem"] == wanted_conj[0] and s["lexems"][k-1]["lexem"] == ",":
+                                            # проход по нужным лексемам до тех пор, пока совпадения есть
                                             for m in range(1, len_wanted_conj2):
+                                                # m запоминать не надо, т.к. она дает лишь len(союз)
                                                 if s["lexems"][k+m]["lexem"] != wanted_conj[m]:
                                                     break
                                             else:
+                                                # если мы не прошли ни одной инструкции в for, союз найден
                                                 possible_conjs[-1].append([k, wanted_conj_kind, wanted_conj])
+                                                # следующий после него должен располагаться минимум через лексему
                                                 k += 1
+            # не забываем запомнить list возможных союзов для данного предложения
             whole_text_pc.append(possible_conjs)
     return whole_text_pc
 
