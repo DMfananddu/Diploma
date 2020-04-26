@@ -38,4 +38,4 @@ def gettingData():
     return inputData
 
 # testing
-print(gettingData())
+# print(gettingData())

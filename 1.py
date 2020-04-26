@@ -1,30 +1,10 @@
-conj_podryad_first_lexems = "а и только ради лишь затем для между вопреки невзирая независимо несмотря даром при тогда вроде подобно то да кроме хотя как перед пока после прежде раньше в только в вследствие благодаря ввиду из-за оттого по потому так тем"
-conj_sostavnye_first_lexems = "или ли либо не то и ни так когда если как хотя едва чем"
+from nltk import tokenize
+from rusenttokenize import ru_sent_tokenize
+testText = "Н.Р. Брысина, М. А. Кучеренко и пр., м. б. и д. б. задолбали, заколебали и т.д., и т. п."
 
-cp = conj_podryad_first_lexems.split()
-cs = conj_sostavnye_first_lexems.split()
-co = []
-for i in cs:
-    if i in cp:
-        co.append(i)
-
-all_conjs = []
-
-f = open("Conjunction_kinds.TXT", encoding="UTF-8").readlines()
-for line in f:
-    elem = line.strip("\n").strip("\t")
-    if elem[-1] != ":":
-        all_conjs.append(elem)
-all_conjs.sort()
-conj_count = len(all_conjs)
-
-for i in range(conj_count):
-    if "...," in all_conjs[i]:
-        conj1 = all_conjs[i].split("..., ")[0]
-        conj2 = all_conjs[i].split("..., ")[1]
-        all_conjs[i] = [conj1.split(), conj2.split()]
-    else:
-        all_conjs[i] = [all_conjs[i].split(), ""]
-
-for i in all_conjs:
-    print(i[0], i[1])
+sent = tokenize.sent_tokenize(testText, language="russian")
+print(sent)
+sent = ru_sent_tokenize(testText)
+print(sent)
+words = tokenize.word_tokenize(sent[0], language="russian")
+print(words)

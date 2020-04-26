@@ -66,7 +66,9 @@ def dataSlicing(inputData):
                 buf = buf[:-1]
                 if buf == "":
                     continue
+                print(buf)
                 buf, dataWordsList[-1] = wordProcessing(buf, dataWordsList[-1])
+                print("\t", buf, dataWordsList[-1])
     if buf != "":
         buf, dataWordsList[-1] = wordProcessing(buf, dataWordsList[-1])
     if buf != "":

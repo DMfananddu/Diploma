@@ -1,5 +1,6 @@
 import nltk
 from reader import gettingData
+from rusenttokenize import ru_sent_tokenize
 from pymorphy2 import MorphAnalyzer
 
 # функция получает строку и делает из него специальную иерархическую структуру
@@ -13,13 +14,13 @@ def parsing(inputText):
         paragraph = {"paragraph": p, "sentences": []}
         text["paragraphs"].append(paragraph)
         # производим токенизацию предложений с использованием nltk
-        sentences = nltk.sent_tokenize(p)
+        sentences = ru_sent_tokenize(p)
         for s in sentences:
             # предложение - текст предложения + предложения + информация (для будущих шагов)
             sentence = {"sentence": s, "lexems": [], "info": []}
             text["paragraphs"][-1]["sentences"].append(sentence)
             # производим токенизацию предложений с использованием nltk
-            lexems = nltk.word_tokenize(s)
+            lexems = nltk.word_tokenize(s, language="russian")
             for l in lexems:
                 # лексема - лексема + варианты её морф.значений (из словаря pymorphy2)
                 lexem = {"lexem": l, "variants": []}
@@ -37,13 +38,12 @@ def parsing(inputText):
                     #   (иначе дальнейший такого варианта не имеет смысла)
                     #   )
                     # )
-                    if morph[i].score >= 0.1 and (morph[i].normal_form == l.lower() or len(morph[i].normal_form)//len(l) < 3 and {'UNKN'} not in morph[i].tag):
+                    if morph[i].score >= 0.01 and (morph[i].normal_form == l.lower() or len(morph[i].normal_form)//len(l) < 3 and {'UNKN'} not in morph[i].tag):
                         # print(morph[i].normal_form, slovo.lower())
                         wordCount += 1
                         lexem["variants"].append(morph[i])
     return text
-    # printingParseResult(text)
-
+    
 # просто функция печати всей этой структуры
 def printingParseResult(textInfoDict):
     print(textInfoDict["text"])
@@ -62,4 +62,5 @@ def printingParseResult(textInfoDict):
                     print("\t\t\t\t", textInfoDict["paragraphs"][p]["sentences"][s]["lexems"][l]["variants"][v])
 
 # testing
-# parsing(testText)
+printingParseResult(parsing(gettingData()))
+
