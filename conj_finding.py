@@ -42,8 +42,8 @@ for i in all_conjs:
     else:
         all_unique_conjs.append(i)
 
-for i in all_conjs:
-    print(i)
+# for i in all_conjs:
+#     print(i)
 
 def sentenceConjFinding(inputSentence):
     # список всех возможных вариантов любых союзов, 
@@ -74,7 +74,6 @@ def sentenceConjFinding(inputSentence):
             # проход по всем вариантам
             for j in range (len_сvl):
                 # рассматриваемый вариант союза
-                print(possible_conjs[i][j])
                 wanted_conj = possible_conjs[i][j][0]
                 # рассматриваемый вид союза
                 wanted_conj_kind = possible_conjs[i][j][2]
@@ -87,8 +86,8 @@ def sentenceConjFinding(inputSentence):
                         if inputSentence["lexems"][i+k]["lexem"] != wanted_conj[k]:
                             break
                     else: # нашли нужный союз
-                        print(i, wanted_conj_kind, wanted_conj)
-                        
+                        if i != 0 and inputSentence["lexems"][i-1]["lexem"] != "," and wanted_conj_kind == "Подчинительный":
+                            continue
                         curr_conjs.append([[i, wanted_conj_kind, wanted_conj]])
                         second_conj_part_accepted = False
                         # отдельный поиск второй части раздельно-составного союза по тому же плану
@@ -98,7 +97,7 @@ def sentenceConjFinding(inputSentence):
                             # ее длина
                             len_wanted_conj2 = len(wanted_conj)
                             # точка отсчёта - следующий элемент после окончания первой части составного союза
-                            k = i + len_wanted_conj1
+                            k = i + len_wanted_conj1 + 1
                             while True:
                                 # после 1-й части должна быть лексема, поэтому наращиваем счётчик перед шагом
                                 k += 1
@@ -113,17 +112,19 @@ def sentenceConjFinding(inputSentence):
                                         if inputSentence["lexems"][k+m]["lexem"] != wanted_conj[m]:
                                             break
                                     else:
-                                        # если мы не прошли ни одной инструкции в for, союз найден
+                                        # если мы не прошли в for, союз найден
                                         second_conj_part_accepted = True
                                         curr_conjs[-1].append([k, wanted_conj_kind, wanted_conj])
                                         # следующий после него должен располагаться минимум через лексему
-                                k += 1
                         # если второй части союза нет, а союз составной,
                         # то первую принятую его часть удаляем
-                        if (not second_conj_part_accepted) and possible_conjs[i][j][1] != '':
+                        if (not second_conj_part_accepted) and possible_conjs[i][j][1] != '' and len(curr_conjs[-1]) == 1:
                             curr_conjs.pop()
-
+    conj_cheking(curr_conjs)
     return curr_conjs
+
+def conj_cheking(possible_conj_list):
+    return possible_conj_list
 
 def fullTextConjFinding(parsedText):
     whole_text_pc = []
