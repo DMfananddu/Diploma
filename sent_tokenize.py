@@ -11,7 +11,7 @@ def sentTokenize(inputSentence):
     outputSentence = inputSentence
     return allSubjectForms, allPredicateForms
 
-# приоритеты существит., местоим., числит., прил., причастия, наречия, инфинитива
+# приоритеты существит., местоим., числит., прил., причастия, инфинитива, наречия
 NOUN_SUBJECT_PRIORITY = 1
 NPRO_SUBJECT_PRIORITY = 2
 NUMR_SUBJECT_PRIORITY = 3
@@ -23,15 +23,15 @@ ADVB_SUBJECT_PRIORITY = 7
 # приоритеты существит., местоим., числит., прил., причастия, наречия, инфинитива
 VERB_PREDICATE_PRIORITY = 1
 INFN_PREDICATE_PRIORITY = 2
-ADVB_PREDICATE_PRIORITY = 3
-NOUN_PREDICATE_PRIORITY = 4
-COMP_PREDICATE_PRIORITY = 5
-ADJF_PREDICATE_PRIORITY = 6
-ADJS_PREDICATE_PRIORITY = 7
-NUMR_PREDICATE_PRIORITY = 8
-NPRO_PREDICATE_PRIORITY = 9
-PRTF_PREDICATE_PRIORITY = 10
-PRTS_PREDICATE_PRIORITY = 11
+NOUN_PREDICATE_PRIORITY = 3
+ADJF_PREDICATE_PRIORITY = 4
+PRTF_PREDICATE_PRIORITY = 5
+ADJS_PREDICATE_PRIORITY = 6
+PRTS_PREDICATE_PRIORITY = 7
+ADVB_PREDICATE_PRIORITY = 8
+COMP_PREDICATE_PRIORITY = 9
+NUMR_PREDICATE_PRIORITY = 10
+NPRO_PREDICATE_PRIORITY = 11
 
 
 def subjectFormFinding(inputWordForms):
