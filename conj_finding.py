@@ -24,9 +24,9 @@ for line in f:
             new_elem.append("Подчинительный")
         if new_elem not in all_conjs:
             all_conjs.append(new_elem)
+
 all_conjs.sort()
 conj_count = len(all_conjs)
-
 for i in range(conj_count):
     if "...," in all_conjs[i][0]:
         conj1 = all_conjs[i][0].split("..., ")[0]
@@ -36,14 +36,10 @@ for i in range(conj_count):
         all_conjs[i] = [all_conjs[i][0].split(), "", all_conjs[i][1]]
 
 all_unique_conjs = []
-for i in all_conjs:
-    if i in all_unique_conjs:
-        continue
-    else:
-        all_unique_conjs.append(i)
-
-# for i in all_conjs:
-#     print(i)
+for i in range(conj_count):
+    if all_conjs[i] != all_conjs[i-1]:
+        all_unique_conjs.append(all_conjs[i])
+        # print(all_conjs[i])
 
 def sentenceConjFinding(inputSentence):
     # список всех возможных вариантов любых союзов, 
@@ -120,18 +116,109 @@ def sentenceConjFinding(inputSentence):
                         # то первую принятую его часть удаляем
                         if (not second_conj_part_accepted) and possible_conjs[i][j][1] != '' and len(curr_conjs[-1]) == 1:
                             curr_conjs.pop()
-    conj_cheking(curr_conjs)
-    return curr_conjs
+    return conj_cheking(curr_conjs)
 
-def conj_cheking(possible_conj_list):
-    return possible_conj_list
+def conj_cheking(possible_conjs):
+    output_conjs = deepcopy(possible_conjs)
+    conjs_count = len(possible_conjs)
+    flag_conj_reality = [True for i in range(conjs_count)]
+    for conjIdx in range(conjs_count):
+        conj_len = len(possible_conjs[conjIdx])
+        for prevConjIdx in range(conjIdx):
+            prevConj_len = len(possible_conjs[prevConjIdx])
+            if flag_conj_reality[prevConjIdx]:
+                if possible_conjs[conjIdx][0][2] > possible_conjs[prevConjIdx][0][2]:
+                    if possible_conjs[conjIdx][0][0] == possible_conjs[prevConjIdx][0][0]:
+                        flag_conj_reality[prevConjIdx] = False
+                    elif possible_conjs[conjIdx][0][2][0] in possible_conjs[prevConjIdx][0][2]:
+                        if (possible_conjs[prevConjIdx][0][2].index(possible_conjs[conjIdx][0][2][0])) + \
+                                possible_conjs[prevConjIdx][0][0] == possible_conjs[conjIdx][0][0]:
+                            flag_conj_reality[conjIdx] = False
+                # попытка выкинуть односложный союз, когда есть двусложный с таким в составе
+                # выкидывание происходит при условии, что 2 часть двусложного не мб самостоятельным союзом
+                # работает для союзов, 2-я часть которых не присутствует в таких союзах, как "то..., то"
+                elif prevConj_len == 1 and possible_conjs[prevConjIdx][0] in possible_conjs[conjIdx]:
+                    print(possible_conjs[conjIdx][0][2], possible_conjs[prevConjIdx][0][2])
+                    prevConjCut_start = possible_conjs[conjIdx].index(possible_conjs[prevConjIdx][0])
+                    l_poss_conjs = possible_conjs[conjIdx][:prevConjCut_start]
+                    r_poss_conjs = possible_conjs[conjIdx][prevConjCut_start+1:]
+                    if l_poss_conjs:
+                        if [l_poss_conjs[0][2], '', l_poss_conjs[0][1]] not in all_unique_conjs:
+                            flag_conj_reality[prevConjIdx] = False
+                    if r_poss_conjs:
+                        if [r_poss_conjs[0][2], '', r_poss_conjs[0][1]] not in all_unique_conjs:
+                            flag_conj_reality[prevConjIdx] = False
+                elif prevConj_len >= 2 and prevConj_len < conj_len:
+                    print(possible_conjs[conjIdx][0][2], possible_conjs[prevConjIdx][0][2])
+                    if possible_conjs[prevConjIdx][0] in possible_conjs[conjIdx]:
+                        if possible_conjs[conjIdx][1:] == possible_conjs[prevConjIdx]:
+                            flag_conj_reality[prevConjIdx] = False
+                    else:
+                        print(possible_conjs[prevConjIdx][0], possible_conjs[conjIdx][0])
+                        for k in range(1, prevConj_len):
+                            if possible_conjs[prevConjIdx][k] in possible_conjs[conjIdx]:
+                                prevConj_cut = possible_conjs[conjIdx].index(possible_conjs[prevConjIdx][k])
+                                output_conjs[conjIdx] = output_conjs[conjIdx][:prevConj_cut]
+        possible_conjs = deepcopy(output_conjs)
+    for conjIdx in range(conjs_count-1, -1, -1):
+        conj_len = len(possible_conjs[conjIdx])
+        for prevConjIdx in range(conjs_count-1, conjIdx, -1):
+            prevConj_len = len(possible_conjs[prevConjIdx])
+            if flag_conj_reality[prevConjIdx]:
+                if possible_conjs[conjIdx][0][2] > possible_conjs[prevConjIdx][0][2]:
+                    if possible_conjs[conjIdx][0][0] == possible_conjs[prevConjIdx][0][0]:
+                        flag_conj_reality[prevConjIdx] = False
+                    elif len(possible_conjs[prevConjIdx][0][2]) == 1 and \
+                            possible_conjs[prevConjIdx][0][2][0] in possible_conjs[conjIdx][0][2]:
+                        if (possible_conjs[conjIdx][0][2].index(possible_conjs[prevConjIdx][0][2][0])) + \
+                                possible_conjs[conjIdx][0][0] == possible_conjs[prevConjIdx][0][0]:
+                            flag_conj_reality[prevConjIdx] = False
+                # попытка выкинуть односложный союз, когда есть двусложный с таким в составе
+                # выкидывание происходит при условии, что 2 часть двусложного не мб самостоятельным союзом
+                # работает для союзов, 2-я часть которых не присутствует в таких союзах, как "то..., то"
+                elif prevConj_len == 1 and possible_conjs[prevConjIdx][0] in possible_conjs[conjIdx]:
+                    print(possible_conjs[conjIdx][0][2], possible_conjs[prevConjIdx][0][2])
+                    prevConjCut_start = possible_conjs[conjIdx].index(possible_conjs[prevConjIdx][0])
+                    l_poss_conjs = possible_conjs[conjIdx][:prevConjCut_start]
+                    r_poss_conjs = possible_conjs[conjIdx][prevConjCut_start+1:]
+                    if l_poss_conjs:
+                        if [l_poss_conjs[0][2], '', l_poss_conjs[0][1]] not in all_unique_conjs:
+                            flag_conj_reality[prevConjIdx] = False
+                    if r_poss_conjs:
+                        if [r_poss_conjs[0][2], '', r_poss_conjs[0][1]] not in all_unique_conjs:
+                            flag_conj_reality[prevConjIdx] = False
+                elif prevConj_len >= 2 and prevConj_len < conj_len:
+                    print(possible_conjs[conjIdx][0][2], possible_conjs[prevConjIdx][0][2])
+                    if possible_conjs[prevConjIdx][0] in possible_conjs[conjIdx]:
+                        if possible_conjs[conjIdx][1:] == possible_conjs[prevConjIdx]:
+                            flag_conj_reality[prevConjIdx] = False
+                    else:
+                        print(possible_conjs[prevConjIdx][0], possible_conjs[conjIdx][0])
+                        for k in range(1, prevConj_len):
+                            if possible_conjs[prevConjIdx][k] in possible_conjs[conjIdx]:
+                                prevConj_cut = possible_conjs[conjIdx].index(possible_conjs[prevConjIdx][k])
+                                output_conjs[conjIdx] = output_conjs[conjIdx][:prevConj_cut]
+        possible_conjs = deepcopy(output_conjs)
+    output_conjs = []
+    for i in range(conjs_count):
+        print(flag_conj_reality[i], possible_conjs[i])
+        if flag_conj_reality[i]:
+            output_conjs.append(possible_conjs[i])
+    return output_conjs
 
 def fullTextConjFinding(parsedText):
     whole_text_pc = []
     for p in parsedText["paragraphs"]:
+        paragraph_possible_conjs = []
         for s in p["sentences"]:
-            whole_text_pc.append(sentenceConjFinding(s))
+            paragraph_possible_conjs.append(sentenceConjFinding(s))
+        whole_text_pc.append(paragraph_possible_conjs)
     return whole_text_pc
 
 # testing
-print(fullTextConjFinding(parsedTestText))
+fullTextConjFinding(parsedTestText)
+
+test1 = "Для примера, в качестве синтаксического объекта возьмем предложение, семантическим элементом тогда будет являться слово или его нормализованная версия, а в качестве рассматриваемой части текста выберем абзац, так как и предложения, и абзац являются формами завершенной мысли."
+test2 = "Если не перестанешь орать, то я тебе врежу, и твоя рожа будет то болеть, то очень болеть, то не болеть, то очень болеть."
+test3 = "Чем больше я о ней думаю, тем сильнее влюбляюсь."
+test4 = "Основная описанного метода состоит в том, что, используя частоту вхождения слова в синтаксические конструкции (предложение, абзац, текст), позицию слова в тексте, а также применение различных эвристик по определению семантических весовых коэффициентов для элементов текста, можно определить основные дескрипторные конструкции (ключевые слова, словосочетания, предложения) и описать семантический «скелет» текста, который можно использовать, например, в задачах классификации."
