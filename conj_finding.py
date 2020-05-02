@@ -2,9 +2,6 @@ from reader import gettingData
 from normal_parser import parsing
 from copy import deepcopy
 
-testText = gettingData()
-parsedTestText = parsing(testText)
-
 
 # получение списка союзов из специального файла в удобочитаемом виде
 all_conjs = []
@@ -82,12 +79,12 @@ def sentenceConjFinding(inputSentence):
                         if inputSentence["lexems"][i+k]["lexem"] != wanted_conj[k]:
                             break
                     else: # нашли нужный союз
-                        if i != 0 and inputSentence["lexems"][i-1]["lexem"] != "," and wanted_conj_kind == "Подчинительный":
+                        if i != 0 and inputSentence["lexems"][i-1]["lexem"] != "," and wanted_conj_kind == "Подчинительный" and possible_conjs[i][j][1] == '':
                             continue
                         curr_conjs.append([[i, wanted_conj_kind, wanted_conj]])
                         second_conj_part_accepted = False
                         # отдельный поиск второй части раздельно-составного союза по тому же плану
-                        if possible_conjs[i][j][1] != '':
+                        if possible_conjs[i][j][1] != '' and (i == 0 or inputSentence["lexems"][i-1]["lexem"] == ","):
                             # разыскиваемая в предложении вторая часть составного союза
                             wanted_conj = possible_conjs[i][j][1]
                             # ее длина
@@ -111,14 +108,13 @@ def sentenceConjFinding(inputSentence):
                                         # если мы не прошли в for, союз найден
                                         second_conj_part_accepted = True
                                         curr_conjs[-1].append([k, wanted_conj_kind, wanted_conj])
-                                        # следующий после него должен располагаться минимум через лексему
                         # если второй части союза нет, а союз составной,
                         # то первую принятую его часть удаляем
                         if (not second_conj_part_accepted) and possible_conjs[i][j][1] != '' and len(curr_conjs[-1]) == 1:
                             curr_conjs.pop()
-    return conj_cheking(curr_conjs)
+    return conjCheking(curr_conjs)
 
-def conj_cheking(possible_conjs):
+def conjCheking(possible_conjs):
     output_conjs = deepcopy(possible_conjs)
     conjs_count = len(possible_conjs)
     flag_conj_reality = [True for i in range(conjs_count)]
@@ -138,7 +134,6 @@ def conj_cheking(possible_conjs):
                 # выкидывание происходит при условии, что 2 часть двусложного не мб самостоятельным союзом
                 # работает для союзов, 2-я часть которых не присутствует в таких союзах, как "то..., то"
                 elif prevConj_len == 1 and possible_conjs[prevConjIdx][0] in possible_conjs[conjIdx]:
-                    print(possible_conjs[conjIdx][0][2], possible_conjs[prevConjIdx][0][2])
                     prevConjCut_start = possible_conjs[conjIdx].index(possible_conjs[prevConjIdx][0])
                     l_poss_conjs = possible_conjs[conjIdx][:prevConjCut_start]
                     r_poss_conjs = possible_conjs[conjIdx][prevConjCut_start+1:]
@@ -149,12 +144,10 @@ def conj_cheking(possible_conjs):
                         if [r_poss_conjs[0][2], '', r_poss_conjs[0][1]] not in all_unique_conjs:
                             flag_conj_reality[prevConjIdx] = False
                 elif prevConj_len >= 2 and prevConj_len < conj_len:
-                    print(possible_conjs[conjIdx][0][2], possible_conjs[prevConjIdx][0][2])
                     if possible_conjs[prevConjIdx][0] in possible_conjs[conjIdx]:
                         if possible_conjs[conjIdx][1:] == possible_conjs[prevConjIdx]:
                             flag_conj_reality[prevConjIdx] = False
                     else:
-                        print(possible_conjs[prevConjIdx][0], possible_conjs[conjIdx][0])
                         for k in range(1, prevConj_len):
                             if possible_conjs[prevConjIdx][k] in possible_conjs[conjIdx]:
                                 prevConj_cut = possible_conjs[conjIdx].index(possible_conjs[prevConjIdx][k])
@@ -177,7 +170,6 @@ def conj_cheking(possible_conjs):
                 # выкидывание происходит при условии, что 2 часть двусложного не мб самостоятельным союзом
                 # работает для союзов, 2-я часть которых не присутствует в таких союзах, как "то..., то"
                 elif prevConj_len == 1 and possible_conjs[prevConjIdx][0] in possible_conjs[conjIdx]:
-                    print(possible_conjs[conjIdx][0][2], possible_conjs[prevConjIdx][0][2])
                     prevConjCut_start = possible_conjs[conjIdx].index(possible_conjs[prevConjIdx][0])
                     l_poss_conjs = possible_conjs[conjIdx][:prevConjCut_start]
                     r_poss_conjs = possible_conjs[conjIdx][prevConjCut_start+1:]
@@ -188,12 +180,10 @@ def conj_cheking(possible_conjs):
                         if [r_poss_conjs[0][2], '', r_poss_conjs[0][1]] not in all_unique_conjs:
                             flag_conj_reality[prevConjIdx] = False
                 elif prevConj_len >= 2 and prevConj_len < conj_len:
-                    print(possible_conjs[conjIdx][0][2], possible_conjs[prevConjIdx][0][2])
                     if possible_conjs[prevConjIdx][0] in possible_conjs[conjIdx]:
                         if possible_conjs[conjIdx][1:] == possible_conjs[prevConjIdx]:
                             flag_conj_reality[prevConjIdx] = False
                     else:
-                        print(possible_conjs[prevConjIdx][0], possible_conjs[conjIdx][0])
                         for k in range(1, prevConj_len):
                             if possible_conjs[prevConjIdx][k] in possible_conjs[conjIdx]:
                                 prevConj_cut = possible_conjs[conjIdx].index(possible_conjs[prevConjIdx][k])
@@ -201,7 +191,7 @@ def conj_cheking(possible_conjs):
         possible_conjs = deepcopy(output_conjs)
     output_conjs = []
     for i in range(conjs_count):
-        print(flag_conj_reality[i], possible_conjs[i])
+        # print(flag_conj_reality[i], possible_conjs[i])
         if flag_conj_reality[i]:
             output_conjs.append(possible_conjs[i])
     return output_conjs
@@ -216,9 +206,9 @@ def fullTextConjFinding(parsedText):
     return whole_text_pc
 
 # testing
-fullTextConjFinding(parsedTestText)
+# fullTextConjFinding(parsing(gettingData()))
 
-test1 = "Для примера, в качестве синтаксического объекта возьмем предложение, семантическим элементом тогда будет являться слово или его нормализованная версия, а в качестве рассматриваемой части текста выберем абзац, так как и предложения, и абзац являются формами завершенной мысли."
-test2 = "Если не перестанешь орать, то я тебе врежу, и твоя рожа будет то болеть, то очень болеть, то не болеть, то очень болеть."
-test3 = "Чем больше я о ней думаю, тем сильнее влюбляюсь."
-test4 = "Основная описанного метода состоит в том, что, используя частоту вхождения слова в синтаксические конструкции (предложение, абзац, текст), позицию слова в тексте, а также применение различных эвристик по определению семантических весовых коэффициентов для элементов текста, можно определить основные дескрипторные конструкции (ключевые слова, словосочетания, предложения) и описать семантический «скелет» текста, который можно использовать, например, в задачах классификации."
+# test1 = "Для примера, в качестве синтаксического объекта возьмем предложение, семантическим элементом тогда будет являться слово или его нормализованная версия, а в качестве рассматриваемой части текста выберем абзац, так как и предложения, и абзац являются формами завершенной мысли."
+# test2 = "Если не перестанешь орать, то я тебе врежу, и твоя рожа будет то болеть, то очень болеть, то не болеть, то очень болеть."
+# test3 = "Чем больше я о ней думаю, тем сильнее влюбляюсь."
+# test4 = "Основная описанного метода состоит в том, что, используя частоту вхождения слова в синтаксические конструкции (предложение, абзац, текст), позицию слова в тексте, а также применение различных эвристик по определению семантических весовых коэффициентов для элементов текста, можно определить основные дескрипторные конструкции (ключевые слова, словосочетания, предложения) и описать семантический «скелет» текста, который можно использовать, например, в задачах классификации."

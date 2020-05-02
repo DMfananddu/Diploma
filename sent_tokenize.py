@@ -1,14 +1,43 @@
 from normal_parser import parsing, printingParseResult
+from conj_finding import sentenceConjFinding, conjCheking
+from reader import gettingData
+from copy import deepcopy
 
-def sentTokenize(inputSentence):
-    outputSentence = ""
-    lenInputSentence = len(inputSentence["lexems"])
+def sentGramBasisVarsFinding(inputSentence, separators_positions):
     allSubjectForms = []
     allPredicateForms = []
-    for lexIndex in range(lenInputSentence):
-        allSubjectForms.append(subjectFormFinding(inputSentence["lexems"][lexIndex]["variants"]))
-        allPredicateForms.append(predicateFormFinding(inputSentence["lexems"][lexIndex]["variants"]))
-    outputSentence = inputSentence
+    partSubjectForms = []
+    partPredicateForms = []
+    sep_count = len(separators_positions)
+    start = 0
+    finish = 0
+    separators_positions.append(len(inputSentence["lexems"]) - 1)
+    for i in range(sep_count+1):
+        start = finish
+        finish = separators_positions[i]+1
+        for lexIndex in range(start, finish):
+            partSubjectForms.append(subjectFormFinding(inputSentence["lexems"][lexIndex]["variants"]))
+            partPredicateForms.append(predicateFormFinding(inputSentence["lexems"][lexIndex]["variants"]))
+        allSubjectForms.append(partSubjectForms)
+        partSubjectForms = []
+        allPredicateForms.append(partPredicateForms)
+        partPredicateForms = []
+    parts_count = len(allSubjectForms)
+    for part in range(parts_count):
+        print(part, "Subjectes")
+        subjs_part_count = len(allSubjectForms[part])
+        for subj in range(subjs_part_count):
+            print("\t", subj)
+            vars_count = len(allSubjectForms[part][subj])
+            for var in range(vars_count):
+                print("\t\t", allSubjectForms[part][subj][var])
+        print(part, "Predicates")
+        subjs_part_count = len(allPredicateForms[part])
+        for subj in range(subjs_part_count):
+            print("\t", subj)
+            vars_count = len(allPredicateForms[part][subj])
+            for var in range(vars_count):
+                print("\t\t", allPredicateForms[part][subj][var])
     return allSubjectForms, allPredicateForms
 
 # приоритеты существит., местоим., числит., прил., причастия, инфинитива, наречия
@@ -61,6 +90,7 @@ def subjectFormFinding(inputWordForms):
             allWordSubjectForms.append([ADVB_SUBJECT_PRIORITY, varIdx, inputWordForms[varIdx].tag])
     return allWordSubjectForms
 
+
 def predicateFormFinding(inputWordForms):
     allWordPredicateForms = []
     varCount = len(inputWordForms)
@@ -101,14 +131,44 @@ def predicateFormFinding(inputWordForms):
     return allWordPredicateForms
 
 # testing
-testSentence = ["В знакомой сакле огонёк то трепетал, то снова гас."]
+# testSentence = ["В знакомой сакле огонёк то трепетал, то снова гас."]
 # printingParseResult(parsing(testSentence))
-resSub, resPred = sentTokenize(parsing(testSentence)["paragraphs"][-1]["sentences"][-1])
-for i in range(len(resSub)):
-    print(i)
-    for j in range(len(resSub[i])):
-        print("\t", resSub[i][j])
-for i in range(len(resPred)):
-    print(i)
-    for j in range(len(resPred[i])):
-        print("\t", resPred[i][j])
+# resSub, resPred = sentTokenize(parsing(testSentence)["paragraphs"][-1]["sentences"][-1])
+# for i in range(len(resSub)):
+#     print(i)
+#     for j in range(len(resSub[i])):
+#         print("\t", resSub[i][j])
+# for i in range(len(resPred)):
+#     print(i)
+#     for j in range(len(resPred[i])):
+#         print("\t", resPred[i][j])
+
+
+def sentSeparatorsFinding(inputSentence):
+    conjs = sentenceConjFinding(inputSentence)
+    separators_indexes = []
+    print("Союзы:")
+    for conj in conjs:
+        print(conj)
+        for lex in conj:
+            vars_count = len(inputSentence["lexems"][lex[0]]["variants"])
+            for varIdx in range(vars_count):
+                if inputSentence["lexems"][lex[0]]["variants"][varIdx].tag.POS == "CONJ":
+                    inputSentence["lexems"][lex[0]]["variants"] = [inputSentence["lexems"][lex[0]]["variants"][varIdx]]
+                    break
+        if conj[0][1] == "Сочинительный" and conj[0][0] != 0 and inputSentence["lexems"][conj[0][0] - 1] != ",":
+            continue
+        for lex in conj:
+            if lex[0] != 0:
+                separators_indexes.append(lex[0])
+    print("sep_indexes:", separators_indexes)
+    return separators_indexes
+
+# testing
+parsedTestText = parsing(gettingData())
+separators = sentSeparatorsFinding(parsedTestText["paragraphs"][0]["sentences"][0])
+sentGramBasisVarsFinding(parsedTestText["paragraphs"][0]["sentences"][0], separators)
+
+
+def gramBasisFinding():
+    return 0
