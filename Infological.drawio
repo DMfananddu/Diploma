@@ -1,4 +1,4 @@
-<mxfile type="github" version="13.0.7" host="app.diagrams.net" modified="2020-05-05T09:50:35.411Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362" etag="y7wYSfX0EAWoPmVdPyQY">
+<mxfile type="github" version="13.0.7" host="app.diagrams.net" modified="2020-05-05T09:50:53.588Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362" etag="W4blRYEoxjsXDFyd0Mz4">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
     <mxGraphModel grid="1" dx="782" dy="466" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -166,7 +166,7 @@
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-46" value="Название" parent="1" style="ellipse;whiteSpace=wrap;html=1;" vertex="1">
-          <mxGeometry as="geometry" height="40" width="80" y="370" x="1272.5" />
+          <mxGeometry as="geometry" height="40" width="80" y="374" x="1272.5" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-58" parent="1" edge="1" target="Er8K7lmykXEFfFOnpzie-57" source="Er8K7lmykXEFfFOnpzie-53" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;endArrow=classic;endFill=1;">
           <mxGeometry as="geometry" relative="1" />
