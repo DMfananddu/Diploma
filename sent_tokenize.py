@@ -109,124 +109,121 @@ def gramBasisFinding(inputSentence, subjes, predes):
                 for s_var_idx in range(s_vars_count):
                     if s_part[s_lex_idx][s_var_idx][0] == s_priority_idx:
                         for p_part in predes:
-                            for p_priority_idx in range(PREDICATE_PRIORITY_COUNT):
-                                for p_lex_idx in range(part_len):
-                                    p_vars_count = len(p_part[p_lex_idx])
-                                    if p_vars_count == 0:
-                                        continue
-                                    for p_var_idx in range(p_vars_count):
-                                        dash_hyphen_flag = dashHyphenFinding(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
-                                        this_that_means_flag = thisThatMeansFinding(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
-                                        not_flag = notFinding(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
-                                        as_flag = asAs_ifAs_though(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
-                                        if p_part[p_lex_idx][p_var_idx][0] == p_priority_idx and (dash_hyphen_flag or not this_that_means_flag):
-                                            if p_part[p_lex_idx][p_var_idx][0] == VERB_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][3].number == "sing":
-                                                        if p_part[p_lex_idx][p_var_idx][3].number == "sing":
-                                                            if s_part[s_lex_idx][s_var_idx][3].gender == p_part[p_lex_idx][p_var_idx][3].gender:
-                                                                gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][2:-1:-1]], [p_part[p_lex_idx][p_var_idx][2:-1:-1]])
+                            if predes.index(p_part) == subjes.index(s_part):
+                                for p_priority_idx in range(PREDICATE_PRIORITY_COUNT):
+                                    for p_lex_idx in range(part_len):
+                                        p_vars_count = len(p_part[p_lex_idx])
+                                        if p_vars_count == 0 or p_lex_idx == s_lex_idx:
+                                            continue
+                                        for p_var_idx in range(p_vars_count):
+                                            # тире
+                                            dash_hyphen_flag = dashHyphenFinding(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
+                                            # это, вот, значит
+                                            this_that_means_flag = thisThatMeansFinding(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
+                                            # не
+                                            not_flag = notFinding(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
+                                            # как, словно, будто
+                                            as_flag = asAs_ifAs_though(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
+                                            # союз, частица, обстоятельство ИЛИ вводное слово, оборот
+                                            conj_prcl_advb_parenthesis_flag = parenthesisFinding(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2]) or conjPrclAdvbFinding(inputSentence, s_part[s_lex_idx][s_var_idx][2], p_part[p_lex_idx][p_var_idx][2])
+                                            if p_part[p_lex_idx][p_var_idx][0] == p_priority_idx and (dash_hyphen_flag or not this_that_means_flag):
+                                                if p_part[p_lex_idx][p_var_idx][0] == VERB_PREDICATE_PRIORITY:
+                                                    if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
+                                                        if not (s_part[s_lex_idx][s_var_idx][3].number == "plur" and p_part[p_lex_idx][p_var_idx][3].number == "sing"):
+                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    elif s_part[s_lex_idx][s_var_idx][0] == ADJF_SUBJECT_PRIORITY:
+                                                        if p_part[p_lex_idx][p_var_idx][3].number == "sing" and p_part[p_lex_idx][p_var_idx][3].gender in ["masc", "neut"]:
+                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                elif p_part[p_lex_idx][p_var_idx][0] == INFN_PREDICATE_PRIORITY:
+                                                    if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
+                                                        if dash_hyphen_flag and not as_flag:
+                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                        elif as_flag and not dash_hyphen_flag:
+                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    elif s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY and dash_hyphen_flag:
+                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                elif p_part[p_lex_idx][p_var_idx][0] == NOUN_PREDICATE_PRIORITY:
+                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
+                                                        if p_part[p_lex_idx][p_var_idx][3].number == s_part[s_lex_idx][s_var_idx][3].number:
+                                                            if dash_hyphen_flag and not conj_prcl_advb_parenthesis_flag:
+                                                                if this_that_means_flag:
+                                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                                elif not (not_flag or as_flag):
+                                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                            elif not dash_hyphen_flag and ((not_flag or as_flag) and not this_that_means_flag) or conj_prcl_advb_parenthesis_flag:
+                                                                gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    elif s_part[s_lex_idx][s_var_idx][0] == NPRO_SUBJECT_PRIORITY or s_part[s_lex_idx][s_var_idx][0] == PRTF_SUBJECT_PRIORITY or s_part[s_lex_idx][s_var_idx][0] == ADJF_SUBJECT_PRIORITY:
+                                                        if s_part[s_lex_idx][s_var_idx][3].number == p_part[p_lex_idx][p_var_idx][3].number:
+                                                            if s_part[s_lex_idx][s_var_idx][3].number == "plur" or s_part[s_lex_idx][s_var_idx][3].number == "sing" and s_part[s_lex_idx][s_var_idx][3].gender == p_part[p_lex_idx][p_var_idx][3].gender:
+                                                                gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    elif s_part[s_lex_idx][s_var_idx][0] == NUMR_SUBJECT_PRIORITY:
+                                                        if s_part[s_lex_idx][s_var_idx][3].number == p_part[p_lex_idx][p_var_idx][3].number:
+                                                            if s_part[s_lex_idx][s_var_idx][3].number == "plur" or s_part[s_lex_idx][s_var_idx][3].number == "sing" and s_part[s_lex_idx][s_var_idx][3].gender == p_part[p_lex_idx][p_var_idx][3].gender:
+                                                                if dash_hyphen_flag and not conj_prcl_advb_parenthesis_flag:
+                                                                    if this_that_means_flag:
+                                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                                    elif not (not_flag or as_flag):
+                                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                                elif not dash_hyphen_flag and ((not_flag or as_flag) and not this_that_means_flag) or conj_prcl_advb_parenthesis_flag:
+                                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    elif s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
+                                                        if p_part[p_lex_idx][p_var_idx][3].number == "sing" and (p_part[p_lex_idx][p_var_idx][3].gender == "masc" or p_part[p_lex_idx][p_var_idx][3].gender == "neut"):
+                                                            if dash_hyphen_flag and not conj_prcl_advb_parenthesis_flag:
+                                                                if this_that_means_flag:
+                                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                                elif not (not_flag or as_flag):
+                                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                            elif not dash_hyphen_flag and ((not_flag or as_flag) and not this_that_means_flag) or conj_prcl_advb_parenthesis_flag:
+                                                                gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    else:
+                                                        if p_part[p_lex_idx][p_var_idx][3].number == "sing" and (p_part[p_lex_idx][p_var_idx][3].gender == "masc" or p_part[p_lex_idx][p_var_idx][3].gender == "neut"):
+                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                elif p_part[p_lex_idx][p_var_idx][0] in [ADJF_PREDICATE_PRIORITY, ADJS_PREDICATE_PRIORITY, PRTF_PREDICATE_PRIORITY, PRTS_PREDICATE_PRIORITY]:
+                                                    if p_part[p_lex_idx][p_var_idx][3].number == "sing" and (p_part[p_lex_idx][p_var_idx][3].gender == "masc" or p_part[p_lex_idx][p_var_idx][3].gender == "neut"):
+                                                        if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
+                                                            if dash_hyphen_flag:
+                                                                gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
                                                         else:
-                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][2:-1:-1]], [p_part[p_lex_idx][p_var_idx][2:-1:-1]])
-                                                    elif p_part[p_lex_idx][p_var_idx][3].number == "plur":
-                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][2:-1:-1]], [p_part[p_lex_idx][p_var_idx][2:-1:-1]])
-                                                elif s_part[s_lex_idx][s_var_idx][0] == ADJF_SUBJECT_PRIORITY:
-                                                    if p_part[p_lex_idx][p_var_idx][3].number == "sing" and p_part[p_lex_idx][p_var_idx][3].gender in ["masc", "neut"]:
-                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][2:-1:-1]], [p_part[p_lex_idx][p_var_idx][2:-1:-1]])
-                                            elif p_part[p_lex_idx][p_var_idx][0] == INFN_PREDICATE_PRIORITY:
-                                                if dash_hyphen_flag and (s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY or s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY):
-                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][2:-1:-1]], [p_part[p_lex_idx][p_var_idx][2:-1:-1]])
+                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                elif p_part[p_lex_idx][p_var_idx][0] in [ADVB_PREDICATE_PRIORITY, COMP_PREDICATE_PRIORITY]:
+                                                    if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
+                                                        if dash_hyphen_flag:
+                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    else:
+                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                elif p_part[p_lex_idx][p_var_idx][0] == NUMR_PREDICATE_PRIORITY:
+                                                    if s_part[s_lex_idx][s_var_idx][0] in [NOUN_SUBJECT_PRIORITY, NUMR_SUBJECT_PRIORITY]:
+                                                        if s_part[s_lex_idx][s_var_idx][3].number == p_part[p_lex_idx][p_var_idx][3].number:
+                                                            if s_part[s_lex_idx][s_var_idx][3].number == "plur" or s_part[s_lex_idx][s_var_idx][3].number == "sing" and s_part[s_lex_idx][s_var_idx][3].gender == p_part[p_lex_idx][p_var_idx][3].gender:
+                                                                if dash_hyphen_flag:
+                                                                    if this_that_means_flag:
+                                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                                    elif not (not_flag or as_flag):
+                                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                                elif (not_flag or as_flag) and not this_that_means_flag:
+                                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    elif s_part[s_lex_idx][s_var_idx][0] in [NPRO_SUBJECT_PRIORITY, ADJF_SUBJECT_PRIORITY, PRTF_SUBJECT_PRIORITY]:
+                                                        if s_part[s_lex_idx][s_var_idx][3].number == p_part[p_lex_idx][p_var_idx][3].number:
+                                                            if s_part[s_lex_idx][s_var_idx][3].number == "plur" or s_part[s_lex_idx][s_var_idx][3].number == "sing" and s_part[s_lex_idx][s_var_idx][3].gender == p_part[p_lex_idx][p_var_idx][3].gender:
+                                                                gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    else:
+                                                        if p_part[p_lex_idx][p_var_idx][3].number == "sing" and s_part[s_lex_idx][s_var_idx][3].gender in ["masc", "neut"]:
+                                                            if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
+                                                                if dash_hyphen_flag:
+                                                                    if this_that_means_flag:
+                                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                                    elif not (not_flag or as_flag):
+                                                                        gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                                elif (not_flag or as_flag) and not this_that_means_flag:
+                                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                            gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
                                                 else:
-                                                    gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][2:-1:-1]], [p_part[p_lex_idx][p_var_idx][2:-1:-1]])
-                                            elif p_part[p_lex_idx][p_var_idx][0] == NOUN_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        if p_part[p_lex_idx][p_var_idx][3].case == "nomn":
-                                                            if ({"Abbr"} in s_part[s_lex_idx][s_var_idx][3] or \
-                                                                    {"Name"} in s_part[s_lex_idx][s_var_idx][3] or \
-                                                                    {"Surn"} in s_part[s_lex_idx][s_var_idx][3] or \
-                                                                    {"Patr"} in s_part[s_lex_idx][s_var_idx][3] or \
-                                                                    {"Geox"} in s_part[s_lex_idx][s_var_idx][3] or \
-                                                                    {"Orgn"} in s_part[s_lex_idx][s_var_idx][3] or \
-                                                                    {"Trad"} in s_part[s_lex_idx][s_var_idx][3]):
-                                                                gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][2:-1:-1]], [p_part[p_lex_idx][p_var_idx][2:-1:-1]])
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
-                                            elif p_part[p_lex_idx][p_var_idx][0] == ADJF_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        break
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
-                                            elif p_part[p_lex_idx][p_var_idx][0] == PRTF_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        break
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
-                                            elif p_part[p_lex_idx][p_var_idx][0] == ADJS_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        break
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
-                                            elif p_part[p_lex_idx][p_var_idx][0] == PRTS_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        break
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
-                                            elif p_part[p_lex_idx][p_var_idx][0] == ADVB_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        break
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
-                                            elif p_part[p_lex_idx][p_var_idx][0] == COMP_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        break
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
-                                            elif p_part[p_lex_idx][p_var_idx][0] == NUMR_PREDICATE_PRIORITY:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        break
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
-                                            else:
-                                                if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
-                                                    if s_part[s_lex_idx][s_var_idx][0] == NOUN_SUBJECT_PRIORITY:
-                                                        break
-                                                    break
-                                                if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                    break
-                                                else:
-                                                    break
+                                                    if s_part[s_lex_idx][s_var_idx][0] <= PRTF_SUBJECT_PRIORITY:
+                                                        if s_part[s_lex_idx][s_var_idx][3].number == p_part[p_lex_idx][p_var_idx][3].number:
+                                                            if s_part[s_lex_idx][s_var_idx][3].number == "plur" or s_part[s_lex_idx][s_var_idx][3].number == "sing" and s_part[s_lex_idx][s_var_idx][3].gender == p_part[p_lex_idx][p_var_idx][3].gender:
+                                                                gram_basis_vars.append([s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+    for i in gram_basis_vars:
+        print(i)
     return gram_basis_vars
 
 
@@ -271,29 +268,29 @@ def predicateFormFinding(inputWordForms, lexIndex):
         # наречие
         elif inputWordForms[varIdx].tag.POS == 'ADVB':
             allWordPredicateForms.append([ADVB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # существительное в им. и тв. падеже
-        if inputWordForms[varIdx].tag.POS == 'NOUN' and (inputWordForms[varIdx].tag.case == 'nomn' or inputWordForms[varIdx].tag.case == 'ablt'):
+        # существительное в им. падеже
+        if inputWordForms[varIdx].tag.POS == 'NOUN' and inputWordForms[varIdx].tag.case == 'nomn':
             allWordPredicateForms.append([NOUN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
         # компаратив
         elif inputWordForms[varIdx].tag.POS == 'COMP':
             allWordPredicateForms.append([COMP_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # прилагательное в им. падеже и тв. падеже
-        elif inputWordForms[varIdx].tag.POS == 'ADJF' and (inputWordForms[varIdx].tag.case == 'nomn' or inputWordForms[varIdx].tag.case == 'ablt'):
+        # прилагательное в им. падеже падеже
+        elif inputWordForms[varIdx].tag.POS == 'ADJF' and inputWordForms[varIdx].tag.case == 'nomn':
             allWordPredicateForms.append([ADJF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
         # краткое прилагательное
         elif inputWordForms[varIdx].tag.POS == 'ADJS':
             allWordPredicateForms.append([ADJS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # местоимение-существительное в им. и тв. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NPRO' and (inputWordForms[varIdx].tag.case == 'nomn' or inputWordForms[varIdx].tag.case == 'ablt'):
+        # местоимение-существительное в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'NPRO' and inputWordForms[varIdx].tag.case == 'nomn':
             allWordPredicateForms.append([NPRO_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # числительное в им. и тв. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NUMR' and (inputWordForms[varIdx].tag.case == 'nomn' or inputWordForms[varIdx].tag.case == 'ablt'):
+        # числительное в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'NUMR' and inputWordForms[varIdx].tag.case == 'nomn':
             allWordPredicateForms.append([NUMR_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # причастие в им. и тв. падеже
-        elif inputWordForms[varIdx].tag.POS == 'PRTF' and (inputWordForms[varIdx].tag.case == 'nomn' or inputWordForms[varIdx].tag.case == 'ablt'):
+        # причастие в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'PRTF' and inputWordForms[varIdx].tag.case == 'nomn':
             allWordPredicateForms.append([PRTF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
         # краткое причастие
-        elif inputWordForms[varIdx].tag.POS == 'PRTS' and (inputWordForms[varIdx].tag.case == 'nomn' or inputWordForms[varIdx].tag.case == 'ablt'):
+        elif inputWordForms[varIdx].tag.POS == 'PRTS':
             allWordPredicateForms.append([PRTS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
     return allWordPredicateForms
 
@@ -333,6 +330,18 @@ def notFinding(inputSentence, subj_position, pred_position):
     return not_flag
 
 
+def parenthesisFinding(inputSentence, subj_position, pred_position):
+    first_flag = False # вводное слово ограничивается всегда 2-мя запятыми
+    second_flag = False
+    for lexemIdx in range(subj_position + 1, pred_position):
+        if inputSentence["lexems"][lexemIdx]["lexem"] == ",":
+            if first_flag:
+                second_flag = True
+            else:
+                first_flag = True
+    return second_flag
+
+
 def dashHyphenFinding(inputSentence, subj_position, pred_position):
     dash_flag = False # тире
     hyphen_flag = False # дефис
@@ -350,11 +359,28 @@ def dashHyphenFinding(inputSentence, subj_position, pred_position):
     return dash_flag or hyphen_flag
 
 
+def conjPrclAdvbFinding(inputSentence, subj_position, pred_position):
+    conj_flag = False # союз
+    prcl_flag = False # частица
+    advb_flag = False# наречие
+    for lexemIdx in range(subj_position + 1, pred_position):
+        variants = inputSentence["lexems"][lexemIdx]["variants"]
+        for var in variants:
+            if {"CONJ"} in var.tag:
+                conj_flag = True
+            if {"PRCL"} in var.tag:
+                prcl_flag = True
+            if {"ADVB"} in var.tag:
+                advb_flag = True
+    return conj_flag or prcl_flag or advb_flag
+
+
 # testing
 parsedTestText = parsing(gettingData())
 testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
 separators = sentSeparatorsFinding(testInputSentence)
 subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
+gramBasisFinding(testInputSentence, subj_vars, pred_vars)
                                             # lexems_count = len(inputSentence["lexems"])
                                             # hyphen_flag = False
                                             # dash_flag = False
