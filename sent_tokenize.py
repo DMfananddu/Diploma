@@ -59,21 +59,21 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
         partSubjectForms = []
         partPredicateForms = []
     parts_count = len(allSubjectForms)
-    # for part in range(parts_count):
-    #     print(part, "Subjectes")
-    #     subjs_part_count = len(allSubjectForms[part])
-    #     for subj in range(subjs_part_count):
-    #         print("\t", subj)
-    #         vars_count = len(allSubjectForms[part][subj])
-    #         for var in range(vars_count):
-    #             print("\t\t", allSubjectForms[part][subj][var])
-    #     print(part, "Predicates")
-    #     subjs_part_count = len(allPredicateForms[part])
-    #     for subj in range(subjs_part_count):
-    #         print("\t", subj)
-    #         vars_count = len(allPredicateForms[part][subj])
-    #         for var in range(vars_count):
-    #             print("\t\t", allPredicateForms[part][subj][var])
+    for part in range(parts_count):
+        print(part, "Subjectes")
+        subjs_part_count = len(allSubjectForms[part])
+        for subj in range(subjs_part_count):
+            print("\t", subj)
+            vars_count = len(allSubjectForms[part][subj])
+            for var in range(vars_count):
+                print("\t\t", allSubjectForms[part][subj][var])
+        print(part, "Predicates")
+        subjs_part_count = len(allPredicateForms[part])
+        for subj in range(subjs_part_count):
+            print("\t", subj)
+            vars_count = len(allPredicateForms[part][subj])
+            for var in range(vars_count):
+                print("\t\t", allPredicateForms[part][subj][var])
     return allSubjectForms, allPredicateForms
 
 
@@ -191,6 +191,8 @@ def gramBasisFinding(inputSentence, subjes, predes):
                                                                 gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
                                                         else:
                                                             gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    elif p_part[p_lex_idx][p_var_idx][3].number == "plur":
+                                                        gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
                                                 elif p_part[p_lex_idx][p_var_idx][0] in [ADVB_PREDICATE_PRIORITY, COMP_PREDICATE_PRIORITY]:
                                                     if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
                                                         if dash_hyphen_flag:
@@ -393,31 +395,44 @@ def conjPrclAdvbFinding(inputSentence, subj_position, pred_position):
 
 def gramBasisFiltering(inputSentence, gram_basis_vars, parts_count):
     res_gb = []
+    # по частям предложения
+    for i in gram_basis_vars:
+        print(i)
     for partIdx in range(parts_count):
-        gb_score = PREDICATE_PRIORITY_COUNT + SUBJECT_PRIORITY_COUNT + 1
+        gb_score = (PREDICATE_PRIORITY_COUNT + SUBJECT_PRIORITY_COUNT)*2 + 1
         part_gb = []
+        # по вариантам в частях
         for var in gram_basis_vars:
+            # если вариант не принадлежит текущей части, проходим мимо него
             if var[0] != partIdx:
                 continue
+            # счёт вариантов подлежащего и сказуемого для выбора наилучшего
             subj_score, pred_score = 0, 0
+            # если подлежащее после сказемого, такой вариант получает штраф
+            if (var[1] and var[2]) and var[1][1] > var[2][1]:
+                var[1][-1] += SUBJECT_PRIORITY_COUNT
+                var[2][-1] += PREDICATE_PRIORITY_COUNT
+            # если есть подлежащее
             if var[1]:
                 subj_score = var[1][-1]
             else:
                 subj_score = 0
+            # если есть сказуемое
             if var[2]:
                 pred_score = var[2][-1]
             else:
                 pred_score = 0
+            # считаем счёт: если нашли лучший вариант подл+сказ
             if subj_score + pred_score < gb_score:
                 part_gb = [var]
                 gb_score = subj_score + pred_score
-
+            # если такой же счёт:
             elif subj_score + pred_score == gb_score:
                 part_gb.append(var)
-        for i in part_gb:
-            print(i)
+        # а теперь уберем из разбора те варианты слов, которые не приняли за подл и сказ
         actual_subj_lex_vars = []
         actual_pred_lex_vars = []
+        print(part_gb)
         for i in range(len(part_gb)):
             if part_gb[0][1]:
                 actual_subj_lex_vars.append(inputSentence["lexems"][part_gb[0][1][1]]["variants"][part_gb[0][1][2]])
@@ -428,6 +443,8 @@ def gramBasisFiltering(inputSentence, gram_basis_vars, parts_count):
         if part_gb[0][2]:
             inputSentence["lexems"][part_gb[0][2][1]]["variants"] = actual_pred_lex_vars
         res_gb.append(part_gb)
+    for i in res_gb:
+        print(i)
     return res_gb
 
 # testing
