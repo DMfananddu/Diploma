@@ -62,5 +62,5 @@ def printingParseResult(textInfoDict):
                     print("\t\t\t\t", textInfoDict["paragraphs"][p]["sentences"][s]["lexems"][l]["variants"][v])
 
 # testing
-# printingParseResult(parsing(gettingData()))
+printingParseResult(parsing(gettingData()))
 

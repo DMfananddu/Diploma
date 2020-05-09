@@ -7,9 +7,9 @@ from copy import deepcopy
 SUBJECT_PRIORITY_COUNT = 7
 NOUN_SUBJECT_PRIORITY = 0
 NPRO_SUBJECT_PRIORITY = 1
-NUMR_SUBJECT_PRIORITY = 2
-ADJF_SUBJECT_PRIORITY = 3
-PRTF_SUBJECT_PRIORITY = 4
+ADJF_SUBJECT_PRIORITY = 2
+PRTF_SUBJECT_PRIORITY = 3
+NUMR_SUBJECT_PRIORITY = 4
 INFN_SUBJECT_PRIORITY = 5
 ADVB_SUBJECT_PRIORITY = 6
 
@@ -17,9 +17,9 @@ ADVB_SUBJECT_PRIORITY = 6
 PREDICATE_PRIORITY_COUNT = 11
 VERB_PREDICATE_PRIORITY = 0
 INFN_PREDICATE_PRIORITY = 1
-NOUN_PREDICATE_PRIORITY = 2
-ADJF_PREDICATE_PRIORITY = 3
-PRTF_PREDICATE_PRIORITY = 4
+ADJF_PREDICATE_PRIORITY = 2
+PRTF_PREDICATE_PRIORITY = 3
+NOUN_PREDICATE_PRIORITY = 4
 ADJS_PREDICATE_PRIORITY = 5
 PRTS_PREDICATE_PRIORITY = 6
 ADVB_PREDICATE_PRIORITY = 7
@@ -42,14 +42,15 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
         finish = separators_positions[i]
         flag_part_existing = False
         for lexIndex in range(start, finish):
-            part_subj_vars = subjectFormFinding(inputSentence["lexems"][lexIndex]["variants"], lexIndex)
-            part_subj_vars.sort()
-            partSubjectForms.append(part_subj_vars)
-            part_pred_vars = predicateFormFinding(inputSentence["lexems"][lexIndex]["variants"], lexIndex)
-            part_pred_vars.sort()
-            partPredicateForms.append(part_pred_vars)
-            if partSubjectForms[-1] or partPredicateForms[-1]:
-                flag_part_existing = True
+            if lexIndex not in separators:
+                part_subj_vars = subjectFormFinding(inputSentence["lexems"][lexIndex]["variants"], lexIndex)
+                part_subj_vars.sort()
+                partSubjectForms.append(part_subj_vars)
+                part_pred_vars = predicateFormFinding(inputSentence["lexems"][lexIndex]["variants"], lexIndex)
+                part_pred_vars.sort()
+                partPredicateForms.append(part_pred_vars)
+                if partSubjectForms[-1] or partPredicateForms[-1]:
+                    flag_part_existing = True
         if not flag_part_existing:
             allSubjectForms[-1].extend(partSubjectForms)
             allPredicateForms[-1].extend(partPredicateForms)
@@ -58,22 +59,22 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
             allPredicateForms.append(partPredicateForms)
         partSubjectForms = []
         partPredicateForms = []
-    parts_count = len(allSubjectForms)
-    for part in range(parts_count):
-        print(part, "Subjectes")
-        subjs_part_count = len(allSubjectForms[part])
-        for subj in range(subjs_part_count):
-            print("\t", subj)
-            vars_count = len(allSubjectForms[part][subj])
-            for var in range(vars_count):
-                print("\t\t", allSubjectForms[part][subj][var])
-        print(part, "Predicates")
-        subjs_part_count = len(allPredicateForms[part])
-        for subj in range(subjs_part_count):
-            print("\t", subj)
-            vars_count = len(allPredicateForms[part][subj])
-            for var in range(vars_count):
-                print("\t\t", allPredicateForms[part][subj][var])
+    # parts_count = len(allSubjectForms)
+    # for part in range(parts_count):
+    #     print(part, "Subjectes")
+    #     subjs_part_count = len(allSubjectForms[part])
+    #     for subj in range(subjs_part_count):
+    #         print("\t", subj)
+    #         vars_count = len(allSubjectForms[part][subj])
+    #         for var in range(vars_count):
+    #             print("\t\t", allSubjectForms[part][subj][var])
+    #     print(part, "Predicates")
+    #     subjs_part_count = len(allPredicateForms[part])
+    #     for subj in range(subjs_part_count):
+    #         print("\t", subj)
+    #         vars_count = len(allPredicateForms[part][subj])
+    #         for var in range(vars_count):
+    #             print("\t\t", allPredicateForms[part][subj][var])
     return allSubjectForms, allPredicateForms
 
 
@@ -185,13 +186,16 @@ def gramBasisFinding(inputSentence, subjes, predes):
                                                         if p_part[p_lex_idx][p_var_idx][3].number == "sing" and (p_part[p_lex_idx][p_var_idx][3].gender == "masc" or p_part[p_lex_idx][p_var_idx][3].gender == "neut"):
                                                             gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
                                                 elif p_part[p_lex_idx][p_var_idx][0] in [ADJF_PREDICATE_PRIORITY, ADJS_PREDICATE_PRIORITY, PRTF_PREDICATE_PRIORITY, PRTS_PREDICATE_PRIORITY]:
-                                                    if p_part[p_lex_idx][p_var_idx][3].number == "sing" and (p_part[p_lex_idx][p_var_idx][3].gender == "masc" or p_part[p_lex_idx][p_var_idx][3].gender == "neut"):
-                                                        if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
-                                                            if dash_hyphen_flag:
+                                                    if p_part[p_lex_idx][p_var_idx][3].number == "sing":
+                                                        if s_part[s_lex_idx][s_var_idx][0] in [INFN_SUBJECT_PRIORITY, ADVB_SUBJECT_PRIORITY]:
+                                                            if dash_hyphen_flag and p_part[p_lex_idx][p_var_idx][3].gender in ["masc", "neut"]:
                                                                 gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
-                                                        else:
-                                                            gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
-                                                    elif p_part[p_lex_idx][p_var_idx][3].number == "plur":
+                                                        elif s_part[s_lex_idx][s_var_idx][3].number == "sing":
+                                                            if s_part[s_lex_idx][s_var_idx][3].gender == p_part[p_lex_idx][p_var_idx][3].gender:
+                                                                gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                            elif s_part[s_lex_idx][s_var_idx][3].gender == "neut":
+                                                                gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
+                                                    else:
                                                         gram_basis_vars.append([predes.index(p_part), s_part[s_lex_idx][s_var_idx][3::-1], p_part[p_lex_idx][p_var_idx][3::-1]])
                                                 elif p_part[p_lex_idx][p_var_idx][0] in [ADVB_PREDICATE_PRIORITY, COMP_PREDICATE_PRIORITY]:
                                                     if s_part[s_lex_idx][s_var_idx][0] == INFN_SUBJECT_PRIORITY:
@@ -364,7 +368,7 @@ def dashHyphenFinding(inputSentence, subj_position, pred_position):
     dash_flag = False # тире
     hyphen_flag = False # дефис
     for lexemIdx in range(subj_position + 1, pred_position):
-        if inputSentence["lexems"][lexemIdx]["lexem"] == "-":
+        if inputSentence["lexems"][lexemIdx]["lexem"] in ["-", "–"]:
             if hyphen_flag:
                 hyphen_flag = False
             else:
@@ -396,64 +400,55 @@ def conjPrclAdvbFinding(inputSentence, subj_position, pred_position):
 def gramBasisFiltering(inputSentence, gram_basis_vars, parts_count):
     res_gb = []
     # по частям предложения
-    for i in gram_basis_vars:
-        print(i)
+    # for i in gram_basis_vars:
+    #     print(i)
     for partIdx in range(parts_count):
-        gb_score = (PREDICATE_PRIORITY_COUNT + SUBJECT_PRIORITY_COUNT)*2 + 1
-        part_gb = []
         # по вариантам в частях
+        part_var_scores = []
         for var in gram_basis_vars:
+            var_score = 0
+            subj_POS = None
+            pred_POS = None
             # если вариант не принадлежит текущей части, проходим мимо него
             if var[0] != partIdx:
                 continue
             # счёт вариантов подлежащего и сказуемого для выбора наилучшего
             subj_score, pred_score = 0, 0
-            # если подлежащее после сказемого, такой вариант получает штраф
-            if (var[1] and var[2]) and var[1][1] > var[2][1]:
-                var[1][-1] += SUBJECT_PRIORITY_COUNT
-                var[2][-1] += PREDICATE_PRIORITY_COUNT
             # если есть подлежащее
             if var[1]:
                 subj_score = var[1][-1]
+                subj_POS = var[1][0].POS
             else:
                 subj_score = 0
             # если есть сказуемое
             if var[2]:
                 pred_score = var[2][-1]
+                pred_POS = var[2][0].POS
             else:
                 pred_score = 0
-            # считаем счёт: если нашли лучший вариант подл+сказ
-            if subj_score + pred_score < gb_score:
-                part_gb = [var]
-                gb_score = subj_score + pred_score
-            # если такой же счёт:
-            elif subj_score + pred_score == gb_score:
-                part_gb.append(var)
-        # а теперь уберем из разбора те варианты слов, которые не приняли за подл и сказ
-        actual_subj_lex_vars = []
-        actual_pred_lex_vars = []
-        print(part_gb)
-        for i in range(len(part_gb)):
-            if part_gb[0][1]:
-                actual_subj_lex_vars.append(inputSentence["lexems"][part_gb[0][1][1]]["variants"][part_gb[0][1][2]])
-            if part_gb[0][2]:
-                actual_pred_lex_vars.append(inputSentence["lexems"][part_gb[0][2][1]]["variants"][part_gb[0][2][2]])
-        if part_gb[0][1]:
-            inputSentence["lexems"][part_gb[0][1][1]]["variants"] = actual_subj_lex_vars
-        if part_gb[0][2]:
-            inputSentence["lexems"][part_gb[0][2][1]]["variants"] = actual_pred_lex_vars
-        res_gb.append(part_gb)
+            # считаем счёт
+            var_score = subj_score + pred_score
+            if subj_POS and pred_POS and var[1][1] > var[2][1]:
+                if subj_POS in ["NOUN", "ADJF", "PRTF", "NPRO"] and pred_POS in ["VERB", "COMP", "NPRO", "ADJS", "PRTS"]:
+                    part_var_scores.append([var_score, var])
+            else:
+                part_var_scores.append([var_score, var])
+        part_var_scores.sort()
+        for i in part_var_scores:
+            res_gb.append(i[1])
     for i in res_gb:
         print(i)
     return res_gb
 
 # testing
 parsedTestText = parsing(gettingData())
+# printingParseResult(parsedTestText)
 testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
 separators = sentSeparatorsFinding(testInputSentence)
 # функции для примера ниже перенести в другой файл
 subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
 gram_basis = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
+# printingParseResult(parsedTestText)
                                             # lexems_count = len(inputSentence["lexems"])
                                             # hyphen_flag = False
                                             # dash_flag = False
