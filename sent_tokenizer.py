@@ -1,7 +1,7 @@
 from normal_parser import parsing, printingParseResult
 from conj_finding import sentenceConjFinding, conjCheking
 from reader import gettingData
-from copy import deepcopy
+
 
 # приоритеты существит., местоим., числит., прил., причастия, инфинитива, наречия
 SUBJECT_PRIORITY_COUNT = 7
@@ -28,21 +28,189 @@ NUMR_PREDICATE_PRIORITY = 9
 NPRO_PREDICATE_PRIORITY = 10
 
 
+def sentSeparatorsFinding(inputSentence):
+    conjs = sentenceConjFinding(inputSentence)
+    separators_indexes = []
+    print("Союзы:")
+    for conj in conjs:
+        print(conj)
+        for lex in conj:
+            vars_count = len(inputSentence["lexems"][lex[0]]["variants"])
+            for varIdx in range(vars_count):
+                if inputSentence["lexems"][lex[0]]["variants"][varIdx].tag.POS == "CONJ":
+                    inputSentence["lexems"][lex[0]]["variants"] = [inputSentence["lexems"][lex[0]]["variants"][varIdx]]
+                    break
+        if conj[0][1] == "Сочинительный" and conj[0][0] != 0 and inputSentence["lexems"][conj[0][0] - 1] != ",":
+            continue
+        for lex in conj:
+            separators_indexes.append(lex[0])
+    print("sep_indexes:", separators_indexes)
+    return separators_indexes, conjs
+
+
+def subjectFormFinding(inputWordForms, lexIndex):
+    allWordSubjectForms = []
+    varCount = len(inputWordForms)
+    for varIdx in range(varCount):
+        # существительное в им. падеже
+        if inputWordForms[varIdx].tag.POS == 'NOUN' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordSubjectForms.append([NOUN_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # местоимение-существительное в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'NPRO' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordSubjectForms.append([NPRO_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # числительное в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'NUMR' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordSubjectForms.append([NUMR_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # инфинитив
+        elif inputWordForms[varIdx].tag.POS == 'INFN':
+            allWordSubjectForms.append([INFN_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # прилагательное в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'ADJF' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordSubjectForms.append([ADJF_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # причастие в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'PRTF' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordSubjectForms.append([PRTF_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # наречие
+        elif inputWordForms[varIdx].tag.POS == 'ADVB':
+            allWordSubjectForms.append([ADVB_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+    return allWordSubjectForms
+
+
+def predicateFormFinding(inputWordForms, lexIndex):
+    allWordPredicateForms = []
+    varCount = len(inputWordForms)
+    for varIdx in range(varCount):
+        # глагол в любой форме
+        if inputWordForms[varIdx].tag.POS == 'VERB':
+            allWordPredicateForms.append([VERB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # инфинитив
+        elif inputWordForms[varIdx].tag.POS == 'INFN':
+            allWordPredicateForms.append([INFN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # наречие
+        elif inputWordForms[varIdx].tag.POS == 'ADVB':
+            allWordPredicateForms.append([ADVB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # существительное в им. падеже
+        if inputWordForms[varIdx].tag.POS == 'NOUN' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordPredicateForms.append([NOUN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # компаратив
+        elif inputWordForms[varIdx].tag.POS == 'COMP':
+            allWordPredicateForms.append([COMP_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # прилагательное в им. падеже падеже
+        elif inputWordForms[varIdx].tag.POS == 'ADJF' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordPredicateForms.append([ADJF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # краткое прилагательное
+        elif inputWordForms[varIdx].tag.POS == 'ADJS':
+            allWordPredicateForms.append([ADJS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # местоимение-существительное в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'NPRO' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordPredicateForms.append([NPRO_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # числительное в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'NUMR' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordPredicateForms.append([NUMR_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # причастие в им. падеже
+        elif inputWordForms[varIdx].tag.POS == 'PRTF' and inputWordForms[varIdx].tag.case == 'nomn':
+            allWordPredicateForms.append([PRTF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        # краткое причастие
+        elif inputWordForms[varIdx].tag.POS == 'PRTS':
+            allWordPredicateForms.append([PRTS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+    return allWordPredicateForms
+
+def thisThatMeansFinding(inputSentence, subj_position, pred_position):
+    this_flag = False # это
+    that_flag = False # вот
+    means_flag = False # значит
+    for lexemIdx in range(subj_position + 1, pred_position):
+        if inputSentence["lexems"][lexemIdx]["lexem"] == "это":
+            this_flag = True
+        elif inputSentence["lexems"][lexemIdx]["lexem"] == "вот":
+            that_flag = True
+        elif inputSentence["lexems"][lexemIdx]["lexem"] == "вот":
+            means_flag = True
+    return this_flag or that_flag or means_flag
+
+
+def asAs_ifAs_though(inputSentence, subj_position, pred_position):
+    as_flag = False # как
+    as_if_flag = False # словно
+    as_though_flag = False # будто
+    for lexemIdx in range(subj_position + 1, pred_position):
+        if inputSentence["lexems"][lexemIdx]["lexem"] == "как":
+            as_flag = True
+        elif inputSentence["lexems"][lexemIdx]["lexem"] == "словно":
+            as_if_flag = True
+        elif inputSentence["lexems"][lexemIdx]["lexem"] == "будто":
+            as_though_flag = True
+    return as_flag or as_if_flag or as_though_flag
+
+
+def notFinding(inputSentence, subj_position, pred_position):
+    not_flag = False # это
+    for lexemIdx in range(subj_position + 1, pred_position):
+        if inputSentence["lexems"][lexemIdx]["lexem"] == "не":
+            this_flag = True
+    return not_flag
+
+
+def parenthesisFinding(inputSentence, subj_position, pred_position):
+    first_flag = False # вводное слово ограничивается всегда 2-мя запятыми
+    second_flag = False
+    for lexemIdx in range(subj_position + 1, pred_position):
+        if inputSentence["lexems"][lexemIdx]["lexem"] == ",":
+            if first_flag:
+                second_flag = True
+            else:
+                first_flag = True
+    return second_flag
+
+
+def dashHyphenFinding(inputSentence, subj_position, pred_position):
+    dash_flag = False # тире
+    hyphen_flag = False # дефис
+    for lexemIdx in range(subj_position + 1, pred_position):
+        if inputSentence["lexems"][lexemIdx]["lexem"] in ["-", "–"]:
+            if hyphen_flag:
+                hyphen_flag = False
+            else:
+                hyphen_flag = True
+        elif inputSentence["lexems"][lexemIdx]["lexem"] == "—":
+            if dash_flag:
+                dash_flag = False
+            else:
+                dash_flag = True                                                    
+    return dash_flag or hyphen_flag
+
+
+def conjPrclAdvbFinding(inputSentence, subj_position, pred_position):
+    conj_flag = False # союз
+    prcl_flag = False # частица
+    advb_flag = False# наречие
+    for lexemIdx in range(subj_position + 1, pred_position):
+        variants = inputSentence["lexems"][lexemIdx]["variants"]
+        for var in variants:
+            if {"CONJ"} in var.tag:
+                conj_flag = True
+            if {"PRCL"} in var.tag:
+                prcl_flag = True
+            if {"ADVB"} in var.tag:
+                advb_flag = True
+    return conj_flag or prcl_flag or advb_flag
+
+
 def sentGramBasisVarsFinding(inputSentence, separators_positions):
     allSubjectForms = []
     allPredicateForms = []
     partSubjectForms = []
     partPredicateForms = []
     sep_count = len(separators_positions)
-    start = 0
-    finish = 0
+    start = 1
+    finish = 1
     separators_positions.append(len(inputSentence["lexems"]))
-    for i in range(sep_count+1):
+    for i in range(1, sep_count+1):
         start = finish
         finish = separators_positions[i]
         flag_part_existing = False
         for lexIndex in range(start, finish):
-            if lexIndex not in separators:
+            if lexIndex not in separators_positions:
                 part_subj_vars = subjectFormFinding(inputSentence["lexems"][lexIndex]["variants"], lexIndex)
                 part_subj_vars.sort()
                 partSubjectForms.append(part_subj_vars)
@@ -76,27 +244,6 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
     #         for var in range(vars_count):
     #             print("\t\t", allPredicateForms[part][subj][var])
     return allSubjectForms, allPredicateForms
-
-
-def sentSeparatorsFinding(inputSentence):
-    conjs = sentenceConjFinding(inputSentence)
-    separators_indexes = []
-    print("Союзы:")
-    for conj in conjs:
-        print(conj)
-        for lex in conj:
-            vars_count = len(inputSentence["lexems"][lex[0]]["variants"])
-            for varIdx in range(vars_count):
-                if inputSentence["lexems"][lex[0]]["variants"][varIdx].tag.POS == "CONJ":
-                    inputSentence["lexems"][lex[0]]["variants"] = [inputSentence["lexems"][lex[0]]["variants"][varIdx]]
-                    break
-        if conj[0][1] == "Сочинительный" and conj[0][0] != 0 and inputSentence["lexems"][conj[0][0] - 1] != ",":
-            continue
-        for lex in conj:
-            if lex[0] != 0:
-                separators_indexes.append(lex[0])
-    print("sep_indexes:", separators_indexes)
-    return separators_indexes
 
 
 def gramBasisFinding(inputSentence, subjes, predes):
@@ -249,6 +396,51 @@ def gramBasisFinding(inputSentence, subjes, predes):
     return gram_basis_vars
 
 
+def gramBasisFiltering(inputSentence, gram_basis_vars, parts_count):
+    res_gb = []
+    # по частям предложения
+    # for i in gram_basis_vars:
+    #     print(i)
+    for partIdx in range(parts_count):
+        # по вариантам в частях
+        part_var_scores = []
+        for var in gram_basis_vars:
+            var_score = 0
+            subj_POS = None
+            pred_POS = None
+            # если вариант не принадлежит текущей части, проходим мимо него
+            if var[0] != partIdx:
+                continue
+            # счёт вариантов подлежащего и сказуемого для выбора наилучшего
+            subj_score, pred_score = 0, 0
+            # если есть подлежащее
+            if var[1]:
+                subj_score = var[1][-1]
+                subj_POS = var[1][0].POS
+            else:
+                subj_score = 0
+            # если есть сказуемое
+            if var[2]:
+                pred_score = var[2][-1]
+                pred_POS = var[2][0].POS
+            else:
+                pred_score = 0
+            # считаем счёт
+            var_score = subj_score + pred_score
+            if subj_POS and pred_POS and var[1][1] > var[2][1]:
+                if subj_POS in ["NOUN", "ADJF", "PRTF", "NPRO"] and pred_POS in ["VERB", "COMP", "NPRO", "ADJS", "PRTS"]:
+                    part_var_scores.append([var_score, var])
+            else:
+                part_var_scores.append([var_score, var])
+        part_var_scores.sort()
+        for i in part_var_scores:
+            res_gb.append(i[1])
+    for i in res_gb:
+        print(i)
+    return res_gb
+
+
+
 def subjectFormFinding(inputWordForms, lexIndex):
     allWordSubjectForms = []
     varCount = len(inputWordForms)
@@ -315,161 +507,3 @@ def predicateFormFinding(inputWordForms, lexIndex):
         elif inputWordForms[varIdx].tag.POS == 'PRTS':
             allWordPredicateForms.append([PRTS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
     return allWordPredicateForms
-
-def thisThatMeansFinding(inputSentence, subj_position, pred_position):
-    this_flag = False # это
-    that_flag = False # вот
-    means_flag = False # значит
-    for lexemIdx in range(subj_position + 1, pred_position):
-        if inputSentence["lexems"][lexemIdx]["lexem"] == "это":
-            this_flag = True
-        elif inputSentence["lexems"][lexemIdx]["lexem"] == "вот":
-            that_flag = True
-        elif inputSentence["lexems"][lexemIdx]["lexem"] == "вот":
-            means_flag = True
-    return this_flag or that_flag or means_flag
-
-
-def asAs_ifAs_though(inputSentence, subj_position, pred_position):
-    as_flag = False # как
-    as_if_flag = False # словно
-    as_though_flag = False # будто
-    for lexemIdx in range(subj_position + 1, pred_position):
-        if inputSentence["lexems"][lexemIdx]["lexem"] == "как":
-            as_flag = True
-        elif inputSentence["lexems"][lexemIdx]["lexem"] == "словно":
-            as_if_flag = True
-        elif inputSentence["lexems"][lexemIdx]["lexem"] == "будто":
-            as_though_flag = True
-    return as_flag or as_if_flag or as_though_flag
-
-
-def notFinding(inputSentence, subj_position, pred_position):
-    not_flag = False # это
-    for lexemIdx in range(subj_position + 1, pred_position):
-        if inputSentence["lexems"][lexemIdx]["lexem"] == "не":
-            this_flag = True
-    return not_flag
-
-
-def parenthesisFinding(inputSentence, subj_position, pred_position):
-    first_flag = False # вводное слово ограничивается всегда 2-мя запятыми
-    second_flag = False
-    for lexemIdx in range(subj_position + 1, pred_position):
-        if inputSentence["lexems"][lexemIdx]["lexem"] == ",":
-            if first_flag:
-                second_flag = True
-            else:
-                first_flag = True
-    return second_flag
-
-
-def dashHyphenFinding(inputSentence, subj_position, pred_position):
-    dash_flag = False # тире
-    hyphen_flag = False # дефис
-    for lexemIdx in range(subj_position + 1, pred_position):
-        if inputSentence["lexems"][lexemIdx]["lexem"] in ["-", "–"]:
-            if hyphen_flag:
-                hyphen_flag = False
-            else:
-                hyphen_flag = True
-        elif inputSentence["lexems"][lexemIdx]["lexem"] == "—":
-            if dash_flag:
-                dash_flag = False
-            else:
-                dash_flag = True                                                    
-    return dash_flag or hyphen_flag
-
-
-def conjPrclAdvbFinding(inputSentence, subj_position, pred_position):
-    conj_flag = False # союз
-    prcl_flag = False # частица
-    advb_flag = False# наречие
-    for lexemIdx in range(subj_position + 1, pred_position):
-        variants = inputSentence["lexems"][lexemIdx]["variants"]
-        for var in variants:
-            if {"CONJ"} in var.tag:
-                conj_flag = True
-            if {"PRCL"} in var.tag:
-                prcl_flag = True
-            if {"ADVB"} in var.tag:
-                advb_flag = True
-    return conj_flag or prcl_flag or advb_flag
-
-
-def gramBasisFiltering(inputSentence, gram_basis_vars, parts_count):
-    res_gb = []
-    # по частям предложения
-    # for i in gram_basis_vars:
-    #     print(i)
-    for partIdx in range(parts_count):
-        # по вариантам в частях
-        part_var_scores = []
-        for var in gram_basis_vars:
-            var_score = 0
-            subj_POS = None
-            pred_POS = None
-            # если вариант не принадлежит текущей части, проходим мимо него
-            if var[0] != partIdx:
-                continue
-            # счёт вариантов подлежащего и сказуемого для выбора наилучшего
-            subj_score, pred_score = 0, 0
-            # если есть подлежащее
-            if var[1]:
-                subj_score = var[1][-1]
-                subj_POS = var[1][0].POS
-            else:
-                subj_score = 0
-            # если есть сказуемое
-            if var[2]:
-                pred_score = var[2][-1]
-                pred_POS = var[2][0].POS
-            else:
-                pred_score = 0
-            # считаем счёт
-            var_score = subj_score + pred_score
-            if subj_POS and pred_POS and var[1][1] > var[2][1]:
-                if subj_POS in ["NOUN", "ADJF", "PRTF", "NPRO"] and pred_POS in ["VERB", "COMP", "NPRO", "ADJS", "PRTS"]:
-                    part_var_scores.append([var_score, var])
-            else:
-                part_var_scores.append([var_score, var])
-        part_var_scores.sort()
-        for i in part_var_scores:
-            res_gb.append(i[1])
-    for i in res_gb:
-        print(i)
-    return res_gb
-
-# testing
-parsedTestText = parsing(gettingData())
-# printingParseResult(parsedTestText)
-testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
-separators = sentSeparatorsFinding(testInputSentence)
-# функции для примера ниже перенести в другой файл
-subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
-gram_basis = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
-# printingParseResult(parsedTestText)
-                                            # lexems_count = len(inputSentence["lexems"])
-                                            # hyphen_flag = False
-                                            # dash_flag = False
-                                            # for lexemIdx in range(s_part[s_lex_idx][2] + 1, p_part[p_lex_idx][2]):
-                                            #     if inputSentence["lexems"][lexemIdx]["lexem"] == "-":
-                                            #         if hyphen_flag:
-                                            #             hyphen_flag = False
-                                            #         else:
-                                            #             hyphen_flag = True
-                                            #     if inputSentence["lexems"][lexemIdx]["lexem"] == "—":
-                                            #         if dash_flag:
-                                            #             dash_flag = False
-                                            #         else:
-                                            #             dash_flag = True
-                                            # if hyphen_flag or dash_flag:
-                                            #     continue
-                            # lexems_count = len(inputSentence["lexems"])
-                            # for lexemIdx in range(lexems_count):
-                            #     if {"PNKT"} in inputSentence["lexems"][lexemIdx]["variants"][0].tag and \
-                            #             inputSentence["lexems"][lexemIdx]["lexem"] == ":" or \
-                            #             inputSentence["lexems"][lexemIdx]["lexem"] == "-" or \
-                            #             inputSentence["lexems"][lexemIdx]["lexem"] == "—":
-                            #         separators_indexes.append(lexemIdx)
-                            
