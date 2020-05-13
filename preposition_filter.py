@@ -59,8 +59,8 @@ def prepositionFiltering(inputSentence):
                     if {"PNCT"} in inputSentence["lexems"][lex_idx]["variants"][0].tag:
                         break
                     true_vars = []
-                    for g in inputSentence["lexems"][lex_idx]["variants"]:
-                        print(g)
+                    # for g in inputSentence["lexems"][lex_idx]["variants"]:
+                    #     print(g)
                     for var in inputSentence["lexems"][lex_idx]["variants"]:
                         if var.tag.POS == "NOUN":
                             if var.tag.case in all_preps[i][1]:
@@ -77,13 +77,15 @@ def prepositionFiltering(inputSentence):
                         elif var.tag.POS == "NUMR":
                             if var.tag.case in all_preps[i][1]:
                                 true_vars.append(var)
+                        elif var.tag.POS != "VERB":
+                            true_vars.append(var)
                         else:
                             true_vars.append(var)
                             break_flag = True
                     inputSentence["lexems"][lex_idx]["variants"] = true_vars
-                    print(0)
-                    for g in inputSentence["lexems"][lex_idx]["variants"]:
-                        print(g)
+                    # print(0)
+                    # for g in inputSentence["lexems"][lex_idx]["variants"]:
+                    #     print(g)
     for i in captured_preps:
         print(i)
     return captured_preps
