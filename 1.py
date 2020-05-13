@@ -8,5 +8,4 @@ sent = ru_sent_tokenize(testText)
 print(sent)
 words = tokenize.word_tokenize(sent[0], language="russian")
 print(words)
-
 # print(ord("—"), ord("-"), ord(":"))

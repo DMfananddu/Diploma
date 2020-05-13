@@ -1,18 +1,7 @@
 from reader import gettingData
 from normal_parser import parsing
 from copy import deepcopy
-from conj_finding import sentenceConjFinding
 from sent_tokenizer import sentSeparatorsFinding, sentGramBasisVarsFinding, gramBasisFinding, gramBasisFiltering
-
-
-# testing
-parsedTestText = parsing(gettingData())
-# printingParseResult(parsedTestText)
-testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
-separators, conjs = sentSeparatorsFinding(testInputSentence)
-# printingParseResult(parsedTestText)
-subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
-gbVars = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
 
 
 def analyzeVarsForming(inputSentence):
@@ -36,4 +25,13 @@ def analyzeVarsForming(inputSentence):
         res_count //= vars_count
     return res
 
+
+# testing
+parsedTestText = parsing(gettingData())
+# printingParseResult(parsedTestText)
+testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
+separators, conjs = sentSeparatorsFinding(testInputSentence)
+# printingParseResult(parsedTestText)
+subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
+gbVars = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
 res_an_vars = analyzeVarsForming(testInputSentence)
