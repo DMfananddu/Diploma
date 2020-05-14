@@ -41,7 +41,7 @@ def parsing(inputText):
                     if morph[i].score >= 0.01 and (morph[i].normal_form == l.lower() or len(morph[i].normal_form)//len(l) < 3 and {'UNKN'} not in morph[i].tag):
                         # print(morph[i].normal_form, slovo.lower())
                         wordCount += 1
-                        lexem["variants"].append(morph[i])
+                        lexem["variants"].append(morph[i].tag)
     return text
     
 # просто функция печати всей этой структуры

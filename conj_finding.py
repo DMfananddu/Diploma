@@ -73,13 +73,14 @@ def sentenceConjFinding(inputSentence):
                 # длина союза в лексемах
                 len_wanted_conj1 = len(wanted_conj)
                 # если длина предполагаемого союза не выводит за пределы предложения, 
-                if i + len_wanted_conj1 < lexem_count: 
+                if i + len_wanted_conj1 < lexem_count:
                     # мы рассматриваем j-й вариант
                     for k in range(1, len_wanted_conj1):
                         if inputSentence["lexems"][i+k]["lexem"] != wanted_conj[k]:
                             break
                     else: # нашли нужный союз
-                        if i != 0 and inputSentence["lexems"][i-1]["lexem"] != "," and wanted_conj_kind == "Подчинительный" and possible_conjs[i][j][1] == '':
+                        # который и т.п. союзы - исключение - рассматриваем отдельно
+                        if wanted_conj[0][:5] != "котор" and i != 0 and inputSentence["lexems"][i-1]["lexem"] != "," and wanted_conj_kind == "Подчинительный" and possible_conjs[i][j][1] == '':
                             continue
                         curr_conjs.append([[i, wanted_conj_kind, wanted_conj]])
                         second_conj_part_accepted = False
@@ -112,9 +113,9 @@ def sentenceConjFinding(inputSentence):
                         # то первую принятую его часть удаляем
                         if (not second_conj_part_accepted) and possible_conjs[i][j][1] != '' and len(curr_conjs[-1]) == 1:
                             curr_conjs.pop()
-    return conjCheking(curr_conjs)
+    return conjCheking(inputSentence, curr_conjs)
 
-def conjCheking(possible_conjs):
+def conjCheking(inputSentence, possible_conjs):
     output_conjs = deepcopy(possible_conjs)
     conjs_count = len(possible_conjs)
     flag_conj_reality = [True for i in range(conjs_count)]
@@ -194,7 +195,29 @@ def conjCheking(possible_conjs):
         # print(flag_conj_reality[i], possible_conjs[i])
         if flag_conj_reality[i]:
             output_conjs.append(possible_conjs[i])
+    conjFiltering(inputSentence, output_conjs)
     return output_conjs
+
+
+def conjFiltering(inputSentence, conjs):
+    conjs_posses = []
+    for conj in conjs:
+        for el_conj in conj:
+            conjs_posses.append(el_conj[0])
+            # lexem_vars = inputSentence["lexems"][el_conj[0]]["variants"]
+    lexem_idx = 0
+    out_vars = []
+    for lexem in inputSentence["lexems"]:
+        for var in lexem["variants"]:
+            if var.POS == "CONJ" and lexem_idx not in conjs_posses:
+                continue
+            else:
+                out_vars.append(var)
+        lexem["variants"] = out_vars
+        out_vars = []
+        lexem_idx += 1
+    return 0
+
 
 def fullTextConjFinding(parsedText):
     whole_text_pc = []

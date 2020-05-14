@@ -37,83 +37,24 @@ def sentSeparatorsFinding(inputSentence):
         for lex in conj:
             vars_count = len(inputSentence["lexems"][lex[0]]["variants"])
             for varIdx in range(vars_count):
-                if inputSentence["lexems"][lex[0]]["variants"][varIdx].tag.POS == "CONJ":
+                if inputSentence["lexems"][lex[0]]["variants"][varIdx].POS == "CONJ":
                     inputSentence["lexems"][lex[0]]["variants"] = [inputSentence["lexems"][lex[0]]["variants"][varIdx]]
                     break
         if conj[0][1] == "Сочинительный" and conj[0][0] != 0 and inputSentence["lexems"][conj[0][0] - 1] != ",":
             continue
-        for lex in conj:
-            separators_indexes.append(lex[0])
+        if conj[0][1] == "Подчинительный" and conj[0][2][0][:5] == "котор":
+            kotor_poss = conj[0][0]
+            for i in range(kotor_poss, -1, -1):
+                if inputSentence["lexems"][i]["lexem"] == ",":
+                    kotor_poss = i+1
+                    break
+            separators_indexes.append(kotor_poss)
+        else:
+            for lex in conj:
+                separators_indexes.append(lex[0])
     print("sep_indexes:", separators_indexes)
     return separators_indexes, conjs
 
-
-def subjectFormFinding(inputWordForms, lexIndex):
-    allWordSubjectForms = []
-    varCount = len(inputWordForms)
-    for varIdx in range(varCount):
-        # существительное в им. падеже
-        if inputWordForms[varIdx].tag.POS == 'NOUN' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([NOUN_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # местоимение-существительное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NPRO' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([NPRO_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # числительное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NUMR' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([NUMR_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # инфинитив
-        elif inputWordForms[varIdx].tag.POS == 'INFN':
-            allWordSubjectForms.append([INFN_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # прилагательное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'ADJF' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([ADJF_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # причастие в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'PRTF' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([PRTF_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # наречие
-        elif inputWordForms[varIdx].tag.POS == 'ADVB':
-            allWordSubjectForms.append([ADVB_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-    return allWordSubjectForms
-
-
-def predicateFormFinding(inputWordForms, lexIndex):
-    allWordPredicateForms = []
-    varCount = len(inputWordForms)
-    for varIdx in range(varCount):
-        # глагол в любой форме
-        if inputWordForms[varIdx].tag.POS == 'VERB':
-            allWordPredicateForms.append([VERB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # инфинитив
-        elif inputWordForms[varIdx].tag.POS == 'INFN':
-            allWordPredicateForms.append([INFN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # наречие
-        elif inputWordForms[varIdx].tag.POS == 'ADVB':
-            allWordPredicateForms.append([ADVB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # существительное в им. падеже
-        if inputWordForms[varIdx].tag.POS == 'NOUN' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([NOUN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # компаратив
-        elif inputWordForms[varIdx].tag.POS == 'COMP':
-            allWordPredicateForms.append([COMP_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # прилагательное в им. падеже падеже
-        elif inputWordForms[varIdx].tag.POS == 'ADJF' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([ADJF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # краткое прилагательное
-        elif inputWordForms[varIdx].tag.POS == 'ADJS':
-            allWordPredicateForms.append([ADJS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # местоимение-существительное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NPRO' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([NPRO_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # числительное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NUMR' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([NUMR_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # причастие в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'PRTF' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([PRTF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-        # краткое причастие
-        elif inputWordForms[varIdx].tag.POS == 'PRTS':
-            allWordPredicateForms.append([PRTS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
-    return allWordPredicateForms
 
 def thisThatMeansFinding(inputSentence, subj_position, pred_position):
     this_flag = False # это
@@ -187,11 +128,11 @@ def conjPrclAdvbFinding(inputSentence, subj_position, pred_position):
     for lexemIdx in range(subj_position + 1, pred_position):
         variants = inputSentence["lexems"][lexemIdx]["variants"]
         for var in variants:
-            if {"CONJ"} in var.tag:
+            if {"CONJ"} in var:
                 conj_flag = True
-            if {"PRCL"} in var.tag:
+            if {"PRCL"} in var:
                 prcl_flag = True
-            if {"ADVB"} in var.tag:
+            if {"ADVB"} in var:
                 advb_flag = True
     return conj_flag or prcl_flag or advb_flag
 
@@ -201,12 +142,13 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
     allPredicateForms = []
     partSubjectForms = []
     partPredicateForms = []
-    sep_count = len(separators_positions)
-    start = 1
-    finish = 1
     separators_positions.append(len(inputSentence["lexems"]))
-    for i in range(1, sep_count+1):
-        start = finish
+    sep_count = len(separators_positions)
+    start = 0
+    finish = 0
+    for i in range(sep_count):
+        if separators_positions[i] == 0:
+            continue
         finish = separators_positions[i]
         flag_part_existing = False
         for lexIndex in range(start, finish):
@@ -220,6 +162,7 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
                 if partSubjectForms[-1] or partPredicateForms[-1]:
                     flag_part_existing = True
         if not flag_part_existing:
+            print(partSubjectForms, partPredicateForms)
             allSubjectForms[-1].extend(partSubjectForms)
             allPredicateForms[-1].extend(partPredicateForms)
         else:
@@ -227,6 +170,7 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
             allPredicateForms.append(partPredicateForms)
         partSubjectForms = []
         partPredicateForms = []
+        start = separators_positions[i]
     # parts_count = len(allSubjectForms)
     # for part in range(parts_count):
     #     print(part, "Subjectes")
@@ -440,32 +384,31 @@ def gramBasisFiltering(inputSentence, gram_basis_vars, parts_count):
     return res_gb
 
 
-
 def subjectFormFinding(inputWordForms, lexIndex):
     allWordSubjectForms = []
     varCount = len(inputWordForms)
     for varIdx in range(varCount):
         # существительное в им. падеже
-        if inputWordForms[varIdx].tag.POS == 'NOUN' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([NOUN_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        if inputWordForms[varIdx].POS == 'NOUN' and inputWordForms[varIdx].case == 'nomn':
+            allWordSubjectForms.append([NOUN_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # местоимение-существительное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NPRO' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([NPRO_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'NPRO' and inputWordForms[varIdx].case == 'nomn':
+            allWordSubjectForms.append([NPRO_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # числительное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NUMR' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([NUMR_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'NUMR' and inputWordForms[varIdx].case == 'nomn':
+            allWordSubjectForms.append([NUMR_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # инфинитив
-        elif inputWordForms[varIdx].tag.POS == 'INFN':
-            allWordSubjectForms.append([INFN_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'INFN':
+            allWordSubjectForms.append([INFN_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # прилагательное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'ADJF' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([ADJF_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'ADJF' and inputWordForms[varIdx].case == 'nomn':
+            allWordSubjectForms.append([ADJF_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # причастие в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'PRTF' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordSubjectForms.append([PRTF_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'PRTF' and inputWordForms[varIdx].case == 'nomn':
+            allWordSubjectForms.append([PRTF_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # наречие
-        elif inputWordForms[varIdx].tag.POS == 'ADVB':
-            allWordSubjectForms.append([ADVB_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'ADVB':
+            allWordSubjectForms.append([ADVB_SUBJECT_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
     return allWordSubjectForms
 
 
@@ -474,36 +417,46 @@ def predicateFormFinding(inputWordForms, lexIndex):
     varCount = len(inputWordForms)
     for varIdx in range(varCount):
         # глагол в любой форме
-        if inputWordForms[varIdx].tag.POS == 'VERB':
-            allWordPredicateForms.append([VERB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        if inputWordForms[varIdx].POS == 'VERB':
+            allWordPredicateForms.append([VERB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # инфинитив
-        elif inputWordForms[varIdx].tag.POS == 'INFN':
-            allWordPredicateForms.append([INFN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'INFN':
+            allWordPredicateForms.append([INFN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # наречие
-        elif inputWordForms[varIdx].tag.POS == 'ADVB':
-            allWordPredicateForms.append([ADVB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'ADVB':
+            allWordPredicateForms.append([ADVB_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # существительное в им. падеже
-        if inputWordForms[varIdx].tag.POS == 'NOUN' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([NOUN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        if inputWordForms[varIdx].POS == 'NOUN' and inputWordForms[varIdx].case == 'nomn':
+            allWordPredicateForms.append([NOUN_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # компаратив
-        elif inputWordForms[varIdx].tag.POS == 'COMP':
-            allWordPredicateForms.append([COMP_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'COMP':
+            allWordPredicateForms.append([COMP_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # прилагательное в им. падеже падеже
-        elif inputWordForms[varIdx].tag.POS == 'ADJF' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([ADJF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'ADJF' and inputWordForms[varIdx].case == 'nomn':
+            allWordPredicateForms.append([ADJF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # краткое прилагательное
-        elif inputWordForms[varIdx].tag.POS == 'ADJS':
-            allWordPredicateForms.append([ADJS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'ADJS':
+            allWordPredicateForms.append([ADJS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # местоимение-существительное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NPRO' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([NPRO_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'NPRO' and inputWordForms[varIdx].case == 'nomn':
+            allWordPredicateForms.append([NPRO_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # числительное в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'NUMR' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([NUMR_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'NUMR' and inputWordForms[varIdx].case == 'nomn':
+            allWordPredicateForms.append([NUMR_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # причастие в им. падеже
-        elif inputWordForms[varIdx].tag.POS == 'PRTF' and inputWordForms[varIdx].tag.case == 'nomn':
-            allWordPredicateForms.append([PRTF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'PRTF' and inputWordForms[varIdx].case == 'nomn':
+            allWordPredicateForms.append([PRTF_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
         # краткое причастие
-        elif inputWordForms[varIdx].tag.POS == 'PRTS':
-            allWordPredicateForms.append([PRTS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx].tag])
+        elif inputWordForms[varIdx].POS == 'PRTS':
+            allWordPredicateForms.append([PRTS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
     return allWordPredicateForms
+
+
+# # testing
+# parsedTestText = parsing(gettingData())
+# # printingParseResult(parsedTestText)
+# testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
+# separators, conjs = sentSeparatorsFinding(testInputSentence)
+# # printingParseResult(parsedTestText)
+# subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
+# gbVars = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
