@@ -43,9 +43,10 @@ def parsing(inputText):
                         wordCount += 1
                         lexem["variants"].append(morph[i].tag)
     return text
-    
+
+
 # просто функция печати всей этой структуры
-def printingParseResult(textInfoDict):
+def printingParseText(textInfoDict):
     print(textInfoDict["text"])
     paragraphsCount = len(textInfoDict["paragraphs"])
     for p in range(paragraphsCount):
@@ -61,6 +62,18 @@ def printingParseResult(textInfoDict):
                 for v in range(variantsCount):
                     print("\t\t\t\t", textInfoDict["paragraphs"][p]["sentences"][s]["lexems"][l]["variants"][v])
 
+
+# просто функция печати всей этой структуры
+def printingParseSentence(sentenceInfoDict):
+    print("\t\t", sentenceInfoDict["sentence"])
+    print("\t\t", sentenceInfoDict["info"])
+    lexemsCount = len(sentenceInfoDict["lexems"])
+    for l in range(lexemsCount):
+        print("\t\t\t", sentenceInfoDict["lexems"][l]["lexem"])
+        variantsCount = len(sentenceInfoDict["lexems"][l]["variants"])
+        for v in range(variantsCount):
+            print("\t\t\t\t", sentenceInfoDict["lexems"][l]["variants"][v])
+
 # testing
-# printingParseResult(parsing(gettingData()))
+# printingParseText(parsing(gettingData()))
 

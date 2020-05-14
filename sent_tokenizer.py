@@ -1,4 +1,4 @@
-from normal_parser import parsing, printingParseResult
+from normal_parser import parsing
 from conj_finding import sentenceConjFinding, conjCheking
 from reader import gettingData
 
@@ -48,10 +48,12 @@ def sentSeparatorsFinding(inputSentence):
                 if inputSentence["lexems"][i]["lexem"] == ",":
                     kotor_poss = i+1
                     break
-            separators_indexes.append(kotor_poss)
+            if kotor_poss not in separators_indexes:
+                separators_indexes.append(kotor_poss)
         else:
             for lex in conj:
-                separators_indexes.append(lex[0])
+                if lex[0] not in separators_indexes:
+                    separators_indexes.append(lex[0])
     print("sep_indexes:", separators_indexes)
     return separators_indexes, conjs
 
