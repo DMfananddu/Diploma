@@ -164,7 +164,6 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
                 if partSubjectForms[-1] or partPredicateForms[-1]:
                     flag_part_existing = True
         if not flag_part_existing:
-            print(partSubjectForms, partPredicateForms)
             allSubjectForms[-1].extend(partSubjectForms)
             allPredicateForms[-1].extend(partPredicateForms)
         else:
@@ -381,8 +380,8 @@ def gramBasisFiltering(inputSentence, gram_basis_vars, parts_count):
         part_var_scores.sort()
         for i in part_var_scores:
             res_gb.append(i[1])
-    for i in res_gb:
-        print(i)
+    # for i in res_gb:
+    #     print(i)
     return res_gb
 
 
