@@ -4,11 +4,21 @@ from copy import deepcopy
 from sent_tokenizer import sentSeparatorsFinding, sentGramBasisVarsFinding, gramBasisFinding, gramBasisFiltering
 
 
+# testing
+parsedTestText = parsing(gettingData())
+# printingParseResult(parsedTestText)
+testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
+separators, conjs = sentSeparatorsFinding(testInputSentence)
+# printingParseResult(parsedTestText)
+subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
+gbVars = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
+if separators[0] != 0:
+    new_separators = [0]
+    new_separators.extend(separators)
+    separators = new_separators
+
+
 def analyzeVarsForming(inputSentence, separators):
-    if 0 not in separators:
-        seps_posses = [0]
-        seps_posses.extend(separators)
-        separators = seps_posses
     res_vars = []
     last_lex = inputSentence["lexems"][-1]
     start = 0
@@ -16,35 +26,78 @@ def analyzeVarsForming(inputSentence, separators):
     for i in range(1, len(separators)):
         finish = separators[i]
         lexems_count = len(inputSentence["lexems"][start:finish])
+        # лексемы части
         lexems = inputSentence["lexems"][start:finish]
+        # список вариантов грамм основ данного предложения
+        part_gb_vars = []
+        for gb_var in gbVars:
+            if gb_var[0] == i-1:
+                # у грамм.основы: тэг, номер лексемы, номер варианта, приоритет
+                subj = []
+                pred = []
+                if gb_var[1]:
+                    subj = gb_var[1][:3]
+                if gb_var[2]:
+                    pred = gb_var[2][:3]
+                part_gb_vars.append([subj, pred])
         res_vars_count = 1
         for li in range(lexems_count):
             res_vars_count *= len(lexems[li]["variants"])
             # print(lexems[li]["lexem"])
             # for vi in range(len(lexems[li]["variants"])):
             #     print("\t", lexems[li]["variants"][vi])
-        part_vars = [i for i in range(res_vars_count)]
+        # part_vars = [i for i in range(res_vars_count)]
         pre_vars_coefs = []
         for li in range(lexems_count):
+            # коэффициенты для вычисления номера рассматриваемого варианта
             pre_vars_coefs.append(res_vars_count//preVarsCount(lexems, li))
-        resPartVarForming(lexems, 0, pre_vars_coefs, 0, [])
+        # перед возвратом данная функция будет иметь все варианты цепочек слов
+        resPartVarForming(lexems, part_gb_vars, 0, pre_vars_coefs, 0, [], i-1)
         start = separators[i]
-        res_vars.append(part_vars)
-    return res_vars
+    return
 
 
-def resPartVarForming(lexems, li, pre_vars_coefs, var_numb, part_var):
+def resPartVarForming(lexems, part_gb_vars, li, pre_vars_coefs, var_numb, part_var, part_number):
     if li == len(lexems):
-        print(var_numb)
+        print(part_number, var_numb)
         # ЗДЕСЬ ВЫЗЫВАТЬ ФУНКЦИЮ ПРОВЕРКИ ПО ПРАВИЛАМ, которая вернет ТРУ
         # ТОГДА МОЖНО БУДЕТ ДОБАВИТЬ ЭТОТ part_var в ответ! дааааа
-        for i in part_var:
-            print("\t", i)
+        # у грамм.основы: тэг, номер лексемы, номер варианта морфологии лексемы
+        current_part_gb_vars = []
+        # флаги грамм.основ (должна ли быть у нас в варианте full_gb/pred_gb/subj_gb)
+        full_gb = False
+        subj_gb = False
+        pred_gb = False
+        # если полноценна грамм.основа
+        if part_gb_vars[0][0] and part_gb_vars[0][1]:
+            full_gb = True
+        # если только подлежащее
+        elif part_gb_vars[0][0]:
+            subj_gb = True
+        # если только сказуемое
+        else:
+            pred_gb = True
+        for gb_var in part_gb_vars:
+            if full_gb and (gb_var[0] and part_var[gb_var[0][1]-separators[part_number]] == gb_var[0][0]) and \
+                    (gb_var[1] and part_var[gb_var[1][1]-separators[part_number]] == gb_var[1][0]):
+                current_part_gb_vars.append(gb_var)
+            elif pred_gb and not gb_var[0] and \
+                    (gb_var[1] and part_var[gb_var[1][1]-separators[part_number]] == gb_var[1][0]):
+                current_part_gb_vars.append(gb_var)
+            elif subj_gb and not gb_var[1] and \
+                    (gb_var[0] and part_var[gb_var[0][1]-separators[part_number]] == gb_var[0][0]):
+                current_part_gb_vars.append(gb_var)
+        # если для данного варианта есть нужная (полная или односложная) грамм.основа
+        if current_part_gb_vars:
+            for gb_var in current_part_gb_vars:
+                print(gb_var)
+                for i in part_var:
+                    print("\t", i)
         return
     vars_count = len(lexems[li]["variants"])
     lex_coef = pre_vars_coefs[li]
     for vi in range(vars_count):
-        resPartVarForming(lexems, li+1, pre_vars_coefs, var_numb+lex_coef*vi, part_var + [lexems[li]["variants"][vi]])
+        resPartVarForming(lexems, part_gb_vars, li+1, pre_vars_coefs, var_numb+lex_coef*vi, part_var + [lexems[li]["variants"][vi]], part_number)
     return
 
 
@@ -54,13 +107,5 @@ def preVarsCount(lexems, li):
         res *= len(lexems[i]["variants"])
     return res
 
-
 # testing
-parsedTestText = parsing(gettingData())
-# printingParseResult(parsedTestText)
-testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
-separators, conjs = sentSeparatorsFinding(testInputSentence)
-# printingParseResult(parsedTestText)
-subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
-gbVars = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
-res_an_vars = analyzeVarsForming(testInputSentence, separators)
+analyzeVarsForming(testInputSentence, separators)

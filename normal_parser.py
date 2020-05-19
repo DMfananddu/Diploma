@@ -75,5 +75,5 @@ def printingParseSentence(sentenceInfoDict):
             print("\t\t\t\t", sentenceInfoDict["lexems"][l]["variants"][v])
 
 # testing
-printingParseText(parsing(gettingData()))
+# printingParseText(parsing(gettingData()))
 
