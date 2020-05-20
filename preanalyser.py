@@ -239,21 +239,21 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, part_number, sent_num
     # то действуем по отдельному алгоритму после всего остального
     # проходимся по всем приоритетам. сначала 1. потом 2 и т.д.
     # правила, необходимые для примера:
-    actual_part_lexems, words, subj_idx, pred_idx = conjEjecting(words, part_lexems, subj_idx, pred_idx)
+    part_vars, part_words, subj_idx, pred_idx = conjEjecting(words, part_lexems, subj_idx, pred_idx)
+    words_flags = [False for i in range(len(part_words))]
     rules_applying_flag = False
     main_words = []
     subordinate_words = []
     for prior in range(RULES_PRIORITY_COUNT):
         while True:
-            l_count = len(actual_part_lexems)
-            new_apl = deepcopy(actual_part_lexems)
+            l_count = len(part_vars)
             for i in range(l_count-2):
-                print(actual_part_lexems[i])
-                if actual_part_lexems[i].POS not in POS_to_SG_KIND.keys():
+                print(part_vars[i])
+                if part_vars[i].POS not in POS_to_SG_KIND.keys() or words_flags[i]:
                     continue
                 this_circle_lex_rules = []
                 for rule in rules:
-                    if rule["ВИД ПЕРВОЙ СГ"] == POS_to_SG_KIND[actual_part_lexems[i].POS] and rule["Приоритет"] == prior:
+                    if rule["ВИД ПЕРВОЙ СГ"] == POS_to_SG_KIND[part_vars[i].POS] and rule["Приоритет"] == prior:
                         this_circle_lex_rules.append(rule)
                 else:
                     continue
@@ -261,16 +261,16 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, part_number, sent_num
                 actual_rule = dict()
                 for rule in this_circle_lex_rules:
                     # если за данной идёт часть речи, про которую нет правил
-                    if actual_part_lexems[i+1].POS not in POS_to_SG_KIND.keys():
+                    if part_vars[i+1].POS not in POS_to_SG_KIND.keys():
                         break
                     # если нет правил для данных двух частей речи
-                    if POS_to_SG_KIND[actual_part_lexems[i+1].POS] != rule["ВИД ВТОРОЙ СГ"]:
+                    if POS_to_SG_KIND[part_vars[i+1].POS] != rule["ВИД ВТОРОЙ СГ"]:
                         continue
                     actual_rule = rule
                     break
                 # если одно из слов НЕ грамматическая основа
                 if i == subj_idx or i == pred_idx or i+1 == subj_idx or i+1 == pred_idx:
-                    if (actual_part_lexems[i].POS == "VERB" or actual_part_lexems[i+1].POS == "VERB") and prior == 0:
+                    if (part_vars[i].POS == "VERB" or part_vars[i+1].POS == "VERB") and prior == 0:
                         rules_applying_flag = True
                         # Главная синтаксическая группа (ГСГ)
                         # (ID ГСГ, содержание, номер предложения, номер части,
@@ -279,18 +279,30 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, part_number, sent_num
                         # 4, оштрафован, 1, 1, 2, 3, 16, 4
                         # запись слова
                         if actual_rule["ТИП ПЕРВОЙ СГ"] == 1:
-                            main_word = [words[i], sent_number, part_number, i, actual_rule["ВИД ПЕРВОЙ СГ"]]
-                            subordinate_word = [words[i+1], sent_number, part_number, i+1, actual_rule["ВИД ПЕРВОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(actual_rule)]
+                            main_word = [part_words[i], sent_number, part_number, i, actual_rule["ВИД ПЕРВОЙ СГ"]]
+                            subordinate_word = [part_words[i+1], sent_number, part_number, i+1, actual_rule["ВИД ПЕРВОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(actual_rule)]
                         else:
-                            main_word = [words[i+1], sent_number, part_number, i+1, actual_rule["ВИД ПЕРВОЙ СГ"]]
-                            subordinate_word = [words[i], sent_number, part_number, i, actual_rule["ВИД ПЕРВОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(actual_rule)]
+                            main_word = [part_words[i+1], sent_number, part_number, i+1, actual_rule["ВИД ПЕРВОЙ СГ"]]
+                            subordinate_word = [part_words[i], sent_number, part_number, i, actual_rule["ВИД ПЕРВОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(actual_rule)]
                         main_words.append(main_word)
                         subordinate_words.append(subordinate_word)
-            # обновляем список необслужанных лексем
-            actual_part_lexems = new_apl
             if not rules_applying_flag:
                 break
     return part_lexems, True
+
+"""
+part_vars - массив вариантов слов части
+part_words - массив всех слов части
+words_flags - массив флагов подчиненности слов
+тогда во время алгоритма мы не расматриваем как i-е слово те слова, которые уже подчинены
+а i+1 - следующее, которое еще не подчинено
+1) если мы не подчинили ни одного слова на всех приоритетах
+и при этом имеем неподчиненными какие-то слова, кроме gb, выбрасываем false
+2) если мы подчинили в этом проходе i-й приоритет, и подчинили сейчас i+1й или больше,
+то возвращаемся к 0-му приоритету правил
+и так до тех пор, пока не останется неподчиненным только gb или не выполнится условие 1)
+"""
+
 
 # testing
 analyzeVarsForming(testInputSentence, separators, 0)
