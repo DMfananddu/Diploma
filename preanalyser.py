@@ -59,7 +59,7 @@ def analyzeVarsForming(inputSentence, separators):
 
 def resPartVarForming(lexems, part_gb_vars, li, pre_vars_coefs, var_numb, part_var, part_number):
     if li == len(lexems):
-        print(part_number, var_numb)
+        # print(part_number, var_numb)
         # ЗДЕСЬ ВЫЗЫВАТЬ ФУНКЦИЮ ПРОВЕРКИ ПО ПРАВИЛАМ, которая вернет ТРУ
         # ТОГДА МОЖНО БУДЕТ ДОБАВИТЬ ЭТОТ part_var в ответ! дааааа
         # у грамм.основы: тэг, номер лексемы, номер варианта морфологии лексемы
@@ -81,18 +81,30 @@ def resPartVarForming(lexems, part_gb_vars, li, pre_vars_coefs, var_numb, part_v
             if full_gb and (gb_var[0] and part_var[gb_var[0][1]-separators[part_number]] == gb_var[0][0]) and \
                     (gb_var[1] and part_var[gb_var[1][1]-separators[part_number]] == gb_var[1][0]):
                 current_part_gb_vars.append(gb_var)
+                current_part_gb_vars[-1][0][1] -= separators[part_number]
+                current_part_gb_vars[-1][1][1] -= separators[part_number]
             elif pred_gb and not gb_var[0] and \
                     (gb_var[1] and part_var[gb_var[1][1]-separators[part_number]] == gb_var[1][0]):
                 current_part_gb_vars.append(gb_var)
+                current_part_gb_vars[-1][1][1] -= separators[part_number]
             elif subj_gb and not gb_var[1] and \
                     (gb_var[0] and part_var[gb_var[0][1]-separators[part_number]] == gb_var[0][0]):
                 current_part_gb_vars.append(gb_var)
+                current_part_gb_vars[-1][0][1] -= separators[part_number]
         # если для данного варианта есть нужная (полная или односложная) грамм.основа
         if current_part_gb_vars:
             for gb_var in current_part_gb_vars:
-                print(gb_var)
-                for i in part_var:
-                    print("\t", i)
+                subj_idx = None
+                pred_idx = None
+                if full_gb:
+                    subj_idx = gb_var[0][1]
+                    pred_idx = gb_var[1][1]
+                elif subj_gb:
+                    subj_idx = gb_var[0][1]
+                else:
+                    pred_idx = gb_var[1][1]
+                print("part_number = ", part_number, ", var_numb = ", var_numb, sep="")
+                res, res_flag = syntaxAnalysis(part_var, subj_idx, pred_idx)
         return
     vars_count = len(lexems[li]["variants"])
     lex_coef = pre_vars_coefs[li]
@@ -106,6 +118,14 @@ def preVarsCount(lexems, li):
     for i in range(li+1):
         res *= len(lexems[i]["variants"])
     return res
+
+
+def syntaxAnalysis(part_lexems, subj_idx, pred_idx):
+    print("subj_idx = ", subj_idx, ", pred_idx = ", pred_idx, sep="")
+    for i in range(len(part_lexems)):
+        if part_lexems[i].POS != "CONJ":
+            print("\t", i, part_lexems[i])
+    return part_lexems, True
 
 # testing
 analyzeVarsForming(testInputSentence, separators)

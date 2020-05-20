@@ -25,7 +25,7 @@ def parsing(inputText):
                 # лексема - лексема + варианты её морф.значений (из словаря pymorphy2)
                 lexem = {"lexem": l, "variants": []}
                 text["paragraphs"][-1]["sentences"][-1]["lexems"].append(lexem)
-                morph = MorphAnalyzer().parse(l)
+                morph = MorphAnalyzer().parse(l.lower())
                 morphCount = len(morph)
                 wordCount = 0
                 for i in range(morphCount):
