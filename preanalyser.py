@@ -371,16 +371,14 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_numb
                 # если одно из слов - грамматическая основа
                 if (i == subj_idx or i == pred_idx or si == subj_idx or si == pred_idx) and not gb_processing_flag:
                     if (part_vars[i].POS == "VERB" or part_vars[si].POS == "VERB") and prior == 1:
-                        rules_applying_flag = True
                         # Главная синтаксическая группа (ГСГ)
                         # (ID ГСГ, содержание, номер предложения, номер части,
                         # номер в части, ВИД СГ, ПРАВИЛО):
                         # запись слова
-                        wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, rules.index(actual_rule), words_flags, main_words, subordinate_words)
+                        rules_applying_flag = wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, rules.index(actual_rule), words_flags, main_words, subordinate_words, subj_idx, pred_idx)
                     continue
                 # тут обработка обычных слов
-                wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, rules.index(actual_rule), words_flags, main_words, subordinate_words)
-                rules_applying_flag = True
+                rules_applying_flag = wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, rules.index(actual_rule), words_flags, main_words, subordinate_words, subj_idx, pred_idx)
             if not rules_applying_flag:
                 priority_workoff_flag = True
                 break
@@ -396,9 +394,10 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_numb
     for i in range(lexems_count):
         if {"PNCT"} in part_vars[i]:
             words_flags[i] = True
-        # print(words_flags[i], subj_idx, pred_idx, i)
-        if not words_flags[i] and subj_idx != None and i != subj_idx and pred_idx != None and i != pred_idx:
-            return main_words, subordinate_words, False
+        if not words_flags[i]:
+            if (subj_idx != None and i != subj_idx or subj_idx == None) \
+                    and (pred_idx != None and i != pred_idx or pred_idx == None):
+                return main_words, subordinate_words, False
     print("main_words")
     for i in main_words:
         print(i)
@@ -438,16 +437,20 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_numb
     return main_words, subordinate_words, True
 
 
-def wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, ar_number, words_flags, main_words, subordinate_words):
+def wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, ar_number, words_flags, main_words, subordinate_words, subj_idx, pred_idx):
     if actual_rule["ТИП ПЕРВОЙ СГ"] == 1:
+        if si == pred_idx or si == subj_idx:
+            return False
         mainWordAppending(main_words, part_vars[i], part_words[i], sent_number, part_number, var_number, i, actual_rule)
         subWordAppending(subordinate_words, part_vars[si], part_words[si], sent_number, part_number, var_number, si, actual_rule, ar_number)
         words_flags[si] = True
     else:
+        if i == pred_idx or i == subj_idx:
+            return False
         mainWordAppending(main_words, part_vars[si], part_words[si], sent_number, part_number, var_number, si, actual_rule)
         subWordAppending(subordinate_words, part_vars[i], part_words[i], sent_number, part_number, var_number,i, actual_rule, ar_number)
         words_flags[i] = True
-    return
+    return True
 
 
 def mainWordAppending(main_words, var, word, sent_number, part_number, var_number, i, actual_rule):
