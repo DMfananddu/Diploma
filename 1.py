@@ -11,14 +11,10 @@ testText = "Я: она, ты."
 # print(ord("—"), ord("-"), ord(":"))
 
 
-def recursia(chislo, slist):
-    if chislo > 3:
-        print("выход")
-        return
-    chislo += 1
-    slist.append(chislo)
-    print("до рекурсии", chislo, slist)
-    recursia(chislo, slist)
-    print("после рекурсии", chislo, slist)
+l = []
 
-recursia(0, [])
+def ap(l):
+    l.append(0)
+    return
+ap(l)
+print(l)
