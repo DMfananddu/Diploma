@@ -142,25 +142,13 @@ POS_to_SG_KIND = {
 }
 
 
-# testing
-parsedTestText = parsing(gettingData())
-# printingParseResult(parsedTestText)
-testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
-separators, conjs = sentSeparatorsFinding(testInputSentence)
-# printingParseResult(parsedTestText)
-subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
-gbVars = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
-if separators[0] != 0:
-    new_separators = [0]
-    new_separators.extend(separators)
-    separators = new_separators
-
-
-def analyzeVarsForming(inputSentence, separators, sent_number):
-    res_vars = []
+def analyzeVarsForming(inputSentence, separators, sent_number, prgf_number, gbVars):
     last_lex = inputSentence["lexems"][-1]
     start = 0
     finish = 0
+    sent_atba = []
+    atba_flags = [True for i in range(len(separators)-1)]
+    res_flags = []
     for i in range(1, len(separators)):
         finish = separators[i]
         lexems_count = len(inputSentence["lexems"][start:finish])
@@ -180,12 +168,14 @@ def analyzeVarsForming(inputSentence, separators, sent_number):
             # коэффициенты для вычисления номера рассматриваемого варианта
             pre_vars_coefs.append(res_vars_count//preVarsCount(lexems, li))
         # перед возвратом данная функция будет иметь все варианты цепочек слов
-        resPartVarForming(lexems, part_gb_vars, 0, pre_vars_coefs, 0, [], i-1, sent_number)
+        rfs = [[True] for i in range(res_vars_count)]
+        resPartVarForming(lexems, part_gb_vars, 0, pre_vars_coefs, 0, [], i-1, sent_number, prgf_number, separators, atba_flags, rfs)
+        res_flags.append(rfs)
         start = separators[i]
-    return
+    return atba_flags, res_flags
 
 
-def resPartVarForming(lexems, part_gb_vars, li, pre_vars_coefs, var_number, part_var, part_number, sent_number):
+def resPartVarForming(lexems, part_gb_vars, li, pre_vars_coefs, var_number, part_var, part_number, sent_number, prgf_number, separators, atba_flags, res_flags):
     if li == len(lexems):
         res_mains = []
         res_subs = []
@@ -203,14 +193,18 @@ def resPartVarForming(lexems, part_gb_vars, li, pre_vars_coefs, var_number, part
         subj_gb = False
         pred_gb = False
         # если полноценна грамм.основа
-        if part_gb_vars[0][0] and part_gb_vars[0][1]:
+        if part_gb_vars and part_gb_vars[0][0] and part_gb_vars[0][1]:
             full_gb = True
         # если только подлежащее
-        elif part_gb_vars[0][0]:
+        elif part_gb_vars and part_gb_vars[0][0]:
             subj_gb = True
         # если только сказуемое
-        else:
+        elif part_gb_vars:
             pred_gb = True
+        else:
+            atba_flags[part_number] = False
+            return
+        res_flag_had_been = False
         for gb_var in part_gb_vars:
             if full_gb and (gb_var[0] and part_var[gb_var[0][1]-separators[part_number]] == gb_var[0][0]) and \
                     (gb_var[1] and part_var[gb_var[1][1]-separators[part_number]] == gb_var[1][0]):
@@ -227,7 +221,13 @@ def resPartVarForming(lexems, part_gb_vars, li, pre_vars_coefs, var_number, part
                 current_part_gb_vars[-1][0][1] -= separators[part_number]
         # если для данного варианта есть нужная (полная или односложная) грамм.основа
         if current_part_gb_vars:
+            for i in range(len(res_flags)):
+                if i == var_number:
+                    for j in range(1, len(current_part_gb_vars)):
+                        res_flags[var_number].append(res_flags[var_number][0])
+            idx = -1
             for gb_var in current_part_gb_vars:
+                idx += 1
                 subj_idx = None
                 pred_idx = None
                 if full_gb:
@@ -240,15 +240,23 @@ def resPartVarForming(lexems, part_gb_vars, li, pre_vars_coefs, var_number, part
                 else:
                     pred_idx = gb_var[1][1]
                     gb_priority = gb_var[1][3]
-                print("part_number = ", part_number, ", var_number = ", var_number, sep="")
-                res_mains, res_subs, res_flag = syntaxAnalysis(words, part_var, subj_idx, pred_idx, var_number, part_number, sent_number, gb_priority)
+                print("prgf_number = ", prgf_number, ", sent_number = ", sent_number, ", part_number = ", part_number, ", var_number = ", var_number, ", subj_idx = ", subj_idx, ", pred_idx = ", pred_idx, sep="")
+                res_flag_idx = current_part_gb_vars.index(gb_var)
+                res_mains, res_subs = syntaxAnalysis(words, part_var, subj_idx, pred_idx, var_number, part_number, sent_number, prgf_number, gb_priority, res_flags[var_number], res_flag_idx)
+                # ТУТ вызвать функцию переделки в метаграфы
+
+
+
+
+
+                
                 # print(res_mains)
                 # print(res_subs)
         return
     vars_count = len(lexems[li]["variants"])
     lex_coef = pre_vars_coefs[li]
     for vi in range(vars_count):
-        resPartVarForming(lexems, part_gb_vars, li+1, pre_vars_coefs, var_number+lex_coef*vi, part_var + [lexems[li]["variants"][vi]], part_number, sent_number)
+        resPartVarForming(lexems, part_gb_vars, li+1, pre_vars_coefs, var_number+lex_coef*vi, part_var + [lexems[li]["variants"][vi]], part_number, sent_number, prgf_number, separators, atba_flags, res_flags)
     return
 
 
@@ -275,7 +283,7 @@ def conjEjecting(words, part_lexems, subj_idx, pred_idx):
     return actual_part_lexems, actual_part_words, subj_idx, pred_idx
 
 
-def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_number, sent_number, gb_priority):
+def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_number, sent_number, prgf_number, gb_priority, res_flags, res_flag_idx):
     # print("subj_idx = ", subj_idx, ", pred_idx = ", pred_idx, ", gb_priority = ", gb_priority, sep="")
     # если из неразобранных слов осталась только грамм основа,
     # то действуем по отдельному алгоритму после всего остального
@@ -375,10 +383,10 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_numb
                         # (ID ГСГ, содержание, номер предложения, номер части,
                         # номер в части, ВИД СГ, ПРАВИЛО):
                         # запись слова
-                        rules_applying_flag = wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, rules.index(actual_rule), words_flags, main_words, subordinate_words, subj_idx, pred_idx)
+                        rules_applying_flag = wordsAppending(part_vars, part_words, i, si, prgf_number, sent_number, part_number, var_number, actual_rule, rules.index(actual_rule), words_flags, main_words, subordinate_words, subj_idx, pred_idx)
                     continue
                 # тут обработка обычных слов
-                rules_applying_flag = wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, rules.index(actual_rule), words_flags, main_words, subordinate_words, subj_idx, pred_idx)
+                rules_applying_flag = wordsAppending(part_vars, part_words, i, si, prgf_number, sent_number, part_number, var_number, actual_rule, rules.index(actual_rule), words_flags, main_words, subordinate_words, subj_idx, pred_idx)
             if not rules_applying_flag:
                 priority_workoff_flag = True
                 break
@@ -390,21 +398,20 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_numb
         else:
             prior = 1
     # выкидывание если не оработали слова (кроме ГРАММ.ОСНОВЫ)
-    print(0)
     for i in range(lexems_count):
         if {"PNCT"} in part_vars[i]:
             words_flags[i] = True
         if not words_flags[i]:
             if (subj_idx != None and i != subj_idx or subj_idx == None) \
                     and (pred_idx != None and i != pred_idx or pred_idx == None):
-                return main_words, subordinate_words, False
-    print("main_words")
-    for i in main_words:
-        print(i)
-    print("sub_words")
-    for i in subordinate_words:
-        print(i)
-    print(0)
+                res_flags[res_flag_idx] = False
+                return main_words, subordinate_words
+    # print("main_words")
+    # for i in main_words:
+    #     print(i)
+    # print("sub_words")
+    # for i in subordinate_words:
+    #     print(i)
     # обработка ГРАММ.ОСНОВЫ
     sent_word = ""
     if subj_idx != None:
@@ -414,7 +421,8 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_numb
         for rule in rules:
             if rule["Название"] == "ПОДЛ":
                 subj_rule = rule
-        subordinate_word = [part_words[subj_idx], sent_number, part_number, var_number, subj_idx, None, subj_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(subj_rule)]
+        # слово; тэг; номер параграфа, предложения, части, варианта; номер в части; ID вид СГ, ID член предложения, ID правила, ID главного слова
+        subordinate_word = [part_words[subj_idx], part_vars[subj_idx], prgf_number, sent_number, part_number, var_number, subj_idx, None, subj_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(subj_rule), None]
         subordinate_words.append(subordinate_word)
     sent_word += "_"
     if pred_idx != None:
@@ -424,58 +432,48 @@ def syntaxAnalysis(words, part_lexems, subj_idx, pred_idx, var_number, part_numb
         for rule in rules:
             if rule["Название"] == "СКАЗ":
                 pred_rule = rule
-        subordinate_word = [part_words[pred_idx], sent_number, part_number, var_number, pred_idx, None, pred_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(pred_rule)]
+        # слово; тэг; номер параграфа, предложения, части, варианта; номер в части; ID вид СГ, ID член предложения, ID правила, ID главного слова
+        subordinate_word = [part_words[pred_idx], part_vars[pred_idx], prgf_number, sent_number, part_number, var_number, pred_idx, POS_to_SG_KIND[part_vars[pred_idx].POS], pred_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(pred_rule), None]
         subordinate_words.append(subordinate_word)
     sent_rule = dict()
     for rule in rules:
         if rule["Название"] == "ПОДЛ+СКАЗ/СКАЗ+ПОДЛ":
             sent_rule = rule
-    subordinate_word = [sent_word, sent_number, part_number, var_number, pred_idx, None, sent_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(sent_rule)]
+    # слово; тэг; номер параграфа, предложения, части, варианта; номер в части; ID вид СГ, ID член предложения, ID правила, ID главного слова
+    subordinate_word = [sent_word, None, prgf_number, sent_number, part_number, var_number, None, None, sent_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], rules.index(sent_rule), None]
     subordinate_words.append(subordinate_word)
     for i in subordinate_words:
         print(i)
-    return main_words, subordinate_words, True
+    return main_words, subordinate_words
 
 
-def wordsAppending(part_vars, part_words, i, si, sent_number, part_number, var_number, actual_rule, ar_number, words_flags, main_words, subordinate_words, subj_idx, pred_idx):
+def wordsAppending(part_vars, part_words, i, si, prgf_number, sent_number, part_number, var_number, actual_rule, ar_number, words_flags, main_words, subordinate_words, subj_idx, pred_idx):
     if actual_rule["ТИП ПЕРВОЙ СГ"] == 1:
         if si == pred_idx or si == subj_idx:
             return False
-        mainWordAppending(main_words, part_vars[i], part_words[i], sent_number, part_number, var_number, i, actual_rule)
-        subWordAppending(subordinate_words, part_vars[si], part_words[si], sent_number, part_number, var_number, si, actual_rule, ar_number)
+        mw_idx = mainWordAppending(main_words, part_vars[i], part_words[i], prgf_number, sent_number, part_number, var_number, i, actual_rule["ВИД ПЕРВОЙ СГ"])
+        subWordAppending(subordinate_words, part_vars[si], part_words[si], prgf_number, sent_number, part_number, var_number, si, actual_rule["ВИД ВТОРОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], ar_number, mw_idx)
         words_flags[si] = True
     else:
         if i == pred_idx or i == subj_idx:
             return False
-        mainWordAppending(main_words, part_vars[si], part_words[si], sent_number, part_number, var_number, si, actual_rule)
-        subWordAppending(subordinate_words, part_vars[i], part_words[i], sent_number, part_number, var_number,i, actual_rule, ar_number)
+        mw_idx = mainWordAppending(main_words, part_vars[si], part_words[si], prgf_number, sent_number, part_number, var_number, si, actual_rule["ВИД ВТОРОЙ СГ"])
+        subWordAppending(subordinate_words, part_vars[i], part_words[i], prgf_number, sent_number, part_number, var_number, i, actual_rule["ВИД ПЕРВОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], ar_number, mw_idx)
         words_flags[i] = True
     return True
 
 
-def mainWordAppending(main_words, var, word, sent_number, part_number, var_number, i, actual_rule):
-    main_words.append([word, var, sent_number, part_number, var_number, i, actual_rule["ВИД ПЕРВОЙ СГ"]])
+def mainWordAppending(main_words, var, word, prgf_number, sent_number, part_number, var_number, i, sg_kind):
+    # слово; тэг; номер параграфа, предложения, части, варианта; номер в части; вид СГ
+    mw_idx = len(main_words)
+    if [word, var, prgf_number, sent_number, part_number, var_number, i, sg_kind] not in main_words:
+        main_words.append([word, var, prgf_number, sent_number, part_number, var_number, i, sg_kind])
+    else:
+        mw_idx = main_words.index([word, var, prgf_number, sent_number, part_number, var_number, i, sg_kind])
+    return mw_idx
+
+
+def subWordAppending(subordinate_words, var, word, prgf_number, sent_number, part_number, var_number, si, sg_kind, attribute, ar_number, mw_idx):
+    # слово; тэг; номер параграфа, предложения, части, варианта; номер в части; ID вид СГ, ID член предложения, ID правила, ID главного слова
+    subordinate_words.append([word, var, prgf_number, sent_number, part_number, var_number, si, sg_kind, attribute, ar_number, mw_idx])
     return
-
-
-def subWordAppending(subordinate_words, var, word, sent_number, part_number, var_number, si, actual_rule, ar_number):
-    subordinate_words.append([word, var, sent_number, part_number, var_number, si, actual_rule["ВИД ПЕРВОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], ar_number])
-    return
-
-
-"""
-part_vars - массив вариантов слов части
-part_words - массив всех слов части
-words_flags - массив флагов подчиненности слов
-тогда во время алгоритма мы не расматриваем как i-е слово те слова, которые уже подчинены
-а si - следующее, которое еще не подчинено
-1) если мы не подчинили ни одного слова на всех приоритетах
-и при этом имеем неподчиненными какие-то слова, кроме gb, выбрасываем false
-2) если мы подчинили в этом проходе i-й приоритет, и подчинили сейчас i+1й или больше,
-то возвращаемся к 0-му приоритету правил
-и так до тех пор, пока не выполнится условие 1)
-"""
-
-
-# testing
-analyzeVarsForming(testInputSentence, separators, 0)

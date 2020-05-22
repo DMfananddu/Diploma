@@ -31,9 +31,9 @@ NPRO_PREDICATE_PRIORITY = 10
 def sentSeparatorsFinding(inputSentence):
     conjs = sentenceConjFinding(inputSentence)
     separators_indexes = []
-    print("Союзы:")
+    # print("Союзы:")
     for conj in conjs:
-        print(conj)
+        # print(conj)
         for lex in conj:
             vars_count = len(inputSentence["lexems"][lex[0]]["variants"])
             for varIdx in range(vars_count):
@@ -54,7 +54,7 @@ def sentSeparatorsFinding(inputSentence):
             for lex in conj:
                 if lex[0] not in separators_indexes:
                     separators_indexes.append(lex[0])
-    print("sep_indexes:", separators_indexes)
+    # print("sep_indexes:", separators_indexes)
     return separators_indexes, conjs
 
 
@@ -163,7 +163,7 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
                 partPredicateForms.append(part_pred_vars)
                 if partSubjectForms[-1] or partPredicateForms[-1]:
                     flag_part_existing = True
-        if not flag_part_existing:
+        if not flag_part_existing and allSubjectForms and allPredicateForms:
             allSubjectForms[-1].extend(partSubjectForms)
             allPredicateForms[-1].extend(partPredicateForms)
         else:
@@ -451,13 +451,3 @@ def predicateFormFinding(inputWordForms, lexIndex):
         elif inputWordForms[varIdx].POS == 'PRTS':
             allWordPredicateForms.append([PRTS_PREDICATE_PRIORITY, varIdx, lexIndex, inputWordForms[varIdx]])
     return allWordPredicateForms
-
-
-# # testing
-# parsedTestText = parsing(gettingData())
-# # printingParseResult(parsedTestText)
-# testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
-# separators, conjs = sentSeparatorsFinding(testInputSentence)
-# # printingParseResult(parsedTestText)
-# subj_vars, pred_vars = sentGramBasisVarsFinding(testInputSentence, separators)
-# gbVars = gramBasisFiltering(testInputSentence, gramBasisFinding(testInputSentence, subj_vars, pred_vars), len(separators))
