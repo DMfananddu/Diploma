@@ -23,27 +23,21 @@ if __name__ == "__main__":
                 new_separators.extend(separators)
                 separators = new_separators
             # testing
-            sent_atba, sent_res = analyzeVarsForming(testInputSentence, separators, sent, prgf, gbVars)
+            sent_atba, sent_res = analyzeVarsForming(testInputSentence, conjs, separators, sent, prgf, gbVars)
             for i in range(len(sent_atba)):
                 lexems = []
                 start = 0
                 finish = len(testInputSentence["lexems"])
                 for lex in range(finish):
                     lexems.append(testInputSentence["lexems"][lex]["lexem"])
-                if separators:
-                    if i == 0:
-                        finish = separators[i]
-                    elif i == len(sent_atba) - 1:
-                        start = separators[i]
-                    else:
-                        start = separators[i]
-                        finish = separators[i+1]
+                start = separators[i]
+                finish = separators[i+1]
                 if not sent_atba[i] or True not in sent_res[i][0]:
-                    print("{}-ю часть {}-го предложения {}-го абзаца невозможно проанализировать.".format(i+1, sent, par))
+                    print("{}-ю часть {}-го предложения {}-го абзаца невозможно проанализировать.".format(i+1, sent, prgf))
                     if not sent_atba[i]:
                         print("Причина: Отсутствие грамматической основы предложения.")
                         continue
                     if True not in sent_res[i]:
                         print("Причина: Отсутствие вариантов разбора предложения.")
                     print("\tДанное предложение: ", lexems)
-                    print("\tДанная часть: ", lexems[start:finish+1])
+                    print("\tДанная часть: ", lexems[start:finish])
