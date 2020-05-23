@@ -164,8 +164,8 @@ def sentGramBasisVarsFinding(inputSentence, separators_positions):
                 if partSubjectForms[-1] or partPredicateForms[-1]:
                     flag_part_existing = True
         if not flag_part_existing and allSubjectForms and allPredicateForms:
-            allSubjectForms[-1].extend(partSubjectForms)
-            allPredicateForms[-1].extend(partPredicateForms)
+            allSubjectForms.append(partSubjectForms)
+            allPredicateForms.append(partPredicateForms)
         else:
             allSubjectForms.append(partSubjectForms)
             allPredicateForms.append(partPredicateForms)

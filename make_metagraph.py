@@ -3,15 +3,18 @@ from normal_parser import parsing, printingParseSentence
 from copy import deepcopy
 from sent_tokenizer import sentSeparatorsFinding, sentGramBasisVarsFinding, gramBasisFinding, gramBasisFiltering
 from preanalyser import analyzeVarsForming
-
+from metagrapher import metagraphMaker
 
 if __name__ == "__main__":
     # testing
     parsedTestText = parsing(gettingData())
     # printingParseResult(parsedTestText)
     prgf_count = len(parsedTestText["paragraphs"])
+    full_text_metagraphs = [None for i in range(prgf_count)]
     for prgf in range(prgf_count):
         sent_count = len(parsedTestText["paragraphs"][prgf]["sentences"])
+        prgf_metagraphs = [None for i in range(sent_count)]
+        full_text_metagraphs[prgf] = prgf_metagraphs
         for sent in range(sent_count):
             testInputSentence = parsedTestText["paragraphs"][prgf]["sentences"][sent]
             separators, conjs = sentSeparatorsFinding(testInputSentence)
@@ -23,7 +26,7 @@ if __name__ == "__main__":
                 new_separators.extend(separators)
                 separators = new_separators
             # testing
-            sent_atba, sent_res = analyzeVarsForming(testInputSentence, conjs, separators, sent, prgf, gbVars)
+            sent_atba, sent_res, to_MM = analyzeVarsForming(testInputSentence, conjs, separators, sent, prgf, gbVars)
             for i in range(len(sent_atba)):
                 lexems = []
                 start = 0
@@ -32,12 +35,32 @@ if __name__ == "__main__":
                     lexems.append(testInputSentence["lexems"][lex]["lexem"])
                 start = separators[i]
                 finish = separators[i+1]
+                # print(sent_res[i], start)
                 if not sent_atba[i] or True not in sent_res[i][0]:
-                    print("{}-ю часть {}-го предложения {}-го абзаца невозможно проанализировать.".format(i+1, sent, prgf))
+                    print("{}-ю часть {}-го предложения {}-го абзаца невозможно проанализировать.".format(i, sent, prgf))
                     if not sent_atba[i]:
-                        print("Причина: Отсутствие грамматической основы предложения.")
-                        continue
-                    if True not in sent_res[i]:
-                        print("Причина: Отсутствие вариантов разбора предложения.")
+                        print("Причина: Отсутствие грамматической основы части.")
+                    if True not in sent_res[i][0]:
+                        print("Причина: Отсутствие вариантов разбора части.")
                     print("\tДанное предложение: ", lexems)
                     print("\tДанная часть: ", lexems[start:finish])
+            parts_count = len(separators)-1
+            sent_parts_vars_count = [0 for i in range(len(separators)-1)]
+            for i in range(len(to_MM)):
+                sent_parts_vars_count[to_MM[i][1][0][4]] += 1
+            print(sent_parts_vars_count)
+            sent_vars_count = 1
+            for i in sent_parts_vars_count:
+                sent_vars_count *= i
+            if sent_vars_count != 0:
+                print("ok", sent_vars_count)
+                sent_metagraphs = [[] for i in range(sent_vars_count)]
+                prgf_metagraphs[sent] = sent_metagraphs
+                for part in range(parts_count):
+                    for var in range(len(to_MM)):
+                        if to_MM[var][1][0][4] == part:
+                            sent_metagraphs.append(metagraphMaker(to_MM[var][0], to_MM[var][1], to_MM[var][2], to_MM[var][3], to_MM[var][4]))
+            else:
+                print("ne ok")
+
+
