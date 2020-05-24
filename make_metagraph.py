@@ -2,8 +2,9 @@ from reader import gettingData
 from normal_parser import parsing, printingParseSentence
 from copy import deepcopy
 from sent_tokenizer import sentSeparatorsFinding, sentGramBasisVarsFinding, gramBasisFinding, gramBasisFiltering
-from preanalyser import analyzeVarsForming
+from analyser import analyzeVarsForming
 from metagrapher import metagraphMaker
+
 
 if __name__ == "__main__":
     # testing
@@ -29,10 +30,14 @@ if __name__ == "__main__":
             sent_atba, sent_res, to_MM = analyzeVarsForming(testInputSentence, conjs, separators, sent, prgf, gbVars)
             for i in range(len(sent_atba)):
                 lexems = []
+                pncts = []
                 start = 0
                 finish = len(testInputSentence["lexems"])
                 for lex in range(finish):
                     lexems.append(testInputSentence["lexems"][lex]["lexem"])
+                    if {"PNCT"} in testInputSentence["lexems"][lex]["variants"][0]:
+                        pncts.append([lex, testInputSentence["lexems"][lex]["lexem"]])
+                pncts.reverse()
                 start = separators[i]
                 finish = separators[i+1]
                 # print(sent_res[i], start)
@@ -48,19 +53,16 @@ if __name__ == "__main__":
             sent_parts_vars_count = [0 for i in range(len(separators)-1)]
             for i in range(len(to_MM)):
                 sent_parts_vars_count[to_MM[i][1][0][4]] += 1
-            print(sent_parts_vars_count)
+            # print(sent_parts_vars_count)
             sent_vars_count = 1
             for i in sent_parts_vars_count:
                 sent_vars_count *= i
             if sent_vars_count != 0:
-                print("ok", sent_vars_count)
-                sent_metagraphs = [[] for i in range(sent_vars_count)]
-                prgf_metagraphs[sent] = sent_metagraphs
-                for part in range(parts_count):
-                    for var in range(len(to_MM)):
-                        if to_MM[var][1][0][4] == part:
-                            sent_metagraphs.append(metagraphMaker(to_MM[var][0], to_MM[var][1], to_MM[var][2], to_MM[var][3], to_MM[var][4]))
+                # print("ok", sent_vars_count)
+                sent_metagraph = []
+                sent_metagraph = metagraphMaker(sent_metagraph, to_MM, pncts, prgf, sent, parts_count, sent_parts_vars_count)
+                prgf_metagraphs[sent] = sent_metagraph
             else:
-                print("ne ok")
-
+                print("{}-е предложение {}-го абзаца невозможно проанализировать.".format(sent, prgf))
+                print("Причина: Отсутствие возможности разбора одной из частей предложения.\n\tПодробное описание выше.")
 

@@ -2,7 +2,7 @@ from reader import gettingData
 from normal_parser import parsing, printingParseSentence
 from copy import deepcopy
 from sent_tokenizer import sentSeparatorsFinding, sentGramBasisVarsFinding, gramBasisFinding, gramBasisFiltering
-from metagrapher import metagraphMaker
+
 
 """
     Правило (ID правила, Название, Приоритет,
@@ -214,7 +214,6 @@ def resPartVarForming(inputSentence, lexems, conjs, part_gb_vars, li, pre_vars_c
                     current_part_gb_vars.append(gb_var)
             elif subj_gb and not gb_var[1]:
                 if (gb_var[0] and part_var[gb_var[0][1]-separators[part_number]] == gb_var[0][0]):
-                    print(part_number)
                     current_part_gb_vars.append(gb_var)
         # если для данного варианта есть нужная (полная или односложная) грамм.основа
         if current_part_gb_vars:
