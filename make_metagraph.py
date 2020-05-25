@@ -40,12 +40,16 @@ if __name__ == "__main__":
                 pncts.reverse()
                 start = separators[i]
                 finish = separators[i+1]
-                # print(sent_res[i], start)
-                if not sent_atba[i] or True not in sent_res[i][0]:
+                sent_res_i_flag = False
+                for j in range(len(sent_res[i])):
+                    if True in sent_res[i][j]:
+                        sent_res_i_flag = True
+                        break
+                if not sent_atba[i] or not sent_res_i_flag:
                     print("{}-ю часть {}-го предложения {}-го абзаца невозможно проанализировать.".format(i, sent, prgf))
                     if not sent_atba[i]:
                         print("Причина: Отсутствие грамматической основы части.")
-                    if True not in sent_res[i][0]:
+                    if not sent_res_i_flag:
                         print("Причина: Отсутствие вариантов разбора части.")
                     print("\tДанное предложение: ", lexems)
                     print("\tДанная часть: ", lexems[start:finish])
@@ -58,11 +62,11 @@ if __name__ == "__main__":
             for i in sent_parts_vars_count:
                 sent_vars_count *= i
             if sent_vars_count != 0:
-                # print("ok", sent_vars_count)
+                print("ok", sent_vars_count)
                 sent_metagraph = []
                 sent_metagraph = metagraphMaker(sent_metagraph, to_MM, pncts, prgf, sent, parts_count, sent_parts_vars_count)
                 prgf_metagraphs[sent] = sent_metagraph
             else:
                 print("{}-е предложение {}-го абзаца невозможно проанализировать.".format(sent, prgf))
-                print("Причина: Отсутствие возможности разбора одной из частей предложения.\n\tПодробное описание выше.")
+                print("Причина: Отсутствие возможности разбора по крайней мере одной из частей предложения.")
 

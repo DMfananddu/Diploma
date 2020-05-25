@@ -10,11 +10,21 @@ testText = "Я: она, ты."
 # print(words)
 # print(ord("—"), ord("-"), ord(":"))
 
+import MySQLdb
 
-l = []
+conn = MySQLdb.connect("localhost", "root", "SO08051897fya", "syntax_analyze", charset="utf8", init_command="SET NAMES UTF8")
+cursor = conn.cursor()
 
-def ap(l):
-    l.append(0)
-    return
-ap(l)
-print(l)
+cursor.execute("SELECT * FROM rule")
+
+# Получаем данные.
+row = cursor.fetchone()
+while True:
+    row = cursor.fetchone()
+    if row is None:
+        break
+    print(row)
+
+ 
+# Разрываем подключение.
+conn.close()

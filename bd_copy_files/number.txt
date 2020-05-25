@@ -1,0 +1,3 @@
+idnumber	name	grammemeid
+1	Единственное	4
+2	Множественное	5

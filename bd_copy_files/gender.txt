@@ -1,0 +1,4 @@
+idgender	name	grammemeid
+1	Мужской	1
+2	Женский	2
+3	Средний	3

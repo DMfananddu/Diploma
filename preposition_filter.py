@@ -90,9 +90,9 @@ def prepositionFiltering(inputSentence):
         print(i)
     return captured_preps
 
-# testing
-parsedTestText = parsing(gettingData())
-# printingParseResult(parsedTestText)
-testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
-separators, conjs = sentSeparatorsFinding(testInputSentence)
-preps = prepositionFiltering(testInputSentence)
+# # testing
+# parsedTestText = parsing(gettingData())
+# # printingParseResult(parsedTestText)
+# testInputSentence = parsedTestText["paragraphs"][0]["sentences"][0]
+# separators, conjs = sentSeparatorsFinding(testInputSentence)
+# preps = prepositionFiltering(testInputSentence)

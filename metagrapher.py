@@ -34,10 +34,10 @@ class MetaVertex:
     
     def __str__(self):
         res_str = f"Слово: {self.word}\tЧлен предложения: {self.attribute}\nТэг слова: {self.tag}\n"
-        res_str += f"Содержимое рёбер метавершины:\n"
-        for key in self.edges:
-            res_str += f"Ребро связывает {key[0]} и {key[1]} слова предложения.\n"
-            res_str += f"Содержимое ребра Метавершины:\n{self.edges[key]}\n"
+        # res_str += f"Содержимое рёбер метавершины:\n"
+        # for key in self.edges:
+            # res_str += f"Ребро связывает {key[0]} и {key[1]} слова предложения.\n"
+            # res_str += f"Содержимое ребра Метавершины:\n{self.edges[key]}\n"
         for key in sorted(self.vertices):
             res_str += f"{key}-е слово имеет содержимое:\n"
             res_str += f"{self.vertices[key]}\n"
@@ -56,7 +56,7 @@ class Edge:
     def __str__(self):
         res_str = f"Ребро содержит следующий подчинительный союз: {self.conjuction}\n"
         res_str += f"Ребро содержит следующий знак препинания: {self.punctuation_mark}\n"
-        res_str += f"Главная вершина:\n{self.start_vertex}\nПодчинённая вершина:\n{self.end_vertex}\n"
+        # res_str += f"Главная вершина:\n{self.start_vertex}\nПодчинённая вершина:\n{self.end_vertex}\n"
         return res_str
 
 
@@ -180,32 +180,6 @@ def makeEdge(to_MM, main_word_number, sub_word_number, mainV, subV, pncts):
     edge = Edge(mainV, subV, edge_conj, edge_pnct)
     return edge
 
-
-"""
-Отдыхающий насорил на пляже, поэтому был оштрафован.
-Отдыхающий насорил на пляже,
-mains
-слово; тэг; номер параграфа, предложения, части, варианта; номер в части; вид СГ
-['пляже', OpencorporaTag('NOUN,inan,masc sing,loct'), 0, 0, 0, 0, 3, 1]
-['насорил', OpencorporaTag('VERB,perf,intr masc,sing,past,indc'), 0, 0, 0, 0, 1, 7]
-subs
-слово; тэг; номер параграфа, предложения, части, варианта; номер в части; ID вид СГ, ID член предложения, ID правила, ID главного слова
-['на', OpencorporaTag('PREP'), 0, 0, 0, 0, 2, 14, 7, 0, 0]
-['пляже', OpencorporaTag('NOUN,inan,masc sing,loct'), 0, 0, 0, 0, 3, 1, 4, 4, 1]
-['Отдыхающий', OpencorporaTag('PRTF,Subx,impf,intr,pres,actv masc,sing,nomn'), 0, 0, 0, 0, 0, None, 2, 5, None]
-['насорил', OpencorporaTag('VERB,perf,intr masc,sing,past,indc'), 0, 0, 0, 0, 1, 7, 3, 6, None]
-['Отдыхающий_насорил', None, 0, 0, 0, 0, None, None, 1, 7, None]
-поэтому был оштрафован.
-mains
-слово; тэг; номер параграфа, предложения, части, варианта; номер в части; вид СГ
-['был', OpencorporaTag('VERB,impf,intr masc,sing,past,indc'), 0, 0, 1, 0, 1, 7]
-subs
-слово; тэг; номер параграфа, предложения, части, варианта; номер в части; ID вид СГ, ID член предложения, ID правила, ID главного слова
-['оштрафован', OpencorporaTag('PRTS,perf,past,pssv masc,sing'), 0, 0, 1, 0, 2, 10, 3, 1, 0]
-['поэтому', OpencorporaTag('ADVB'), 0, 0, 1, 0, 0, 12, 6, 2, 0]
-['был', OpencorporaTag('VERB,impf,intr masc,sing,past,indc'), 0, 0, 1, 0, 1, 7, 3, 6, None]
-['_был', None, 0, 0, 1, 0, None, None, 1, 7, None]
-"""
 
 """ НЕ ИСПОЛЬЗУЕТСЯ
 class MetaEdge(Edge):
