@@ -137,12 +137,6 @@ def mgEdgeConjPnctFinding(conjs, pncts, sub_part_number, separators):
     edge_conj = []
     edge_pnct = []
     finish = separators[sub_part_number]
-    start = separators[sub_part_number]
-    for i in range(len(pncts)):
-        if start < pncts[i][0] < finish:
-            edge_pnct = pncts[i]
-            pncts.pop(i)
-            break
     for conj in conjs:
         if len(conj) > 1:
             for el in conj:
@@ -153,6 +147,13 @@ def mgEdgeConjPnctFinding(conjs, pncts, sub_part_number, separators):
             if conj[0][0] == finish:
                 edge_conj = conj[0]
                 main_part_number = sub_part_number - 1
+    start = separators[main_part_number]
+    for i in range(len(pncts)):
+        # print("sent", pncts[i], start, finish)
+        if start < pncts[i][0] < finish:
+            edge_pnct = pncts[i]
+            pncts.pop(i)
+            break
     return edge_conj, edge_pnct, main_part_number
 
 
@@ -171,6 +172,7 @@ def makeEdge(to_MM, main_word_number, sub_word_number, mainV, subV, pncts):
                     to_MM[2].pop(to_MM[2].index(conj))
                 break
     for pnct in pncts:
+        # print("part", pnct, start, finish)
         if start < pnct[0] < finish:
             edge_pnct = pnct
             pncts.pop(pncts.index(pnct))
