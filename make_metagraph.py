@@ -62,7 +62,7 @@ if __name__ == "__main__":
             for i in sent_parts_vars_count:
                 sent_vars_count *= i
             if sent_vars_count != 0:
-                print("ok", sent_vars_count)
+                print("\nУ данного предложения существует следующее количество вариантов разбора: {}\n\n".format(sent_vars_count))
                 sent_metagraph = []
                 sent_metagraph = metagraphMaker(sent_metagraph, to_MM, pncts, prgf, sent, parts_count, sent_parts_vars_count)
                 prgf_metagraphs[sent] = sent_metagraph

@@ -127,7 +127,7 @@ def metagraphMaker(sent_metagraph, to_MM, pncts, prgf_number, sent_number, parts
                 edge_conj, edge_pnct, main_part_number = mgEdgeConjPnctFinding(conjs, pncts, part_idx, separators)
                 for prev_part_var_idx in range(len(sent_metavertexes[main_part_number])):
                     # ключ словаря: номер 1й и 2й частей, номер вара из 1й и 2й частей
-                    sent_edges[(main_part_number, curr_part_var_idx, prev_part_var_idx, curr_part_var_idx)] = Edge(sent_metavertexes[main_part_number][prev_part_var_idx], sent_metavertexes[part_idx][curr_part_var_idx], edge_conj, edge_pnct)
+                    sent_edges[(main_part_number, part_idx, prev_part_var_idx, curr_part_var_idx)] = Edge(sent_metavertexes[main_part_number][prev_part_var_idx], sent_metavertexes[part_idx][curr_part_var_idx], edge_conj, edge_pnct)
     sent_metagraph = MetaGraph(to_MM[0][4]["sentence"], prgf_number, sent_number, None, sent_metavertexes, sent_edges, None)
     print(sent_metagraph)
     return sent_metagraph
