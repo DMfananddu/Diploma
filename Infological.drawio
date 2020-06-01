@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2020-06-01T08:41:13.242Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="ux30aY4doL1kJGXwRoWT" version="13.1.5" type="github">
+<mxfile host="app.diagrams.net" modified="2020-06-01T08:46:05.840Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="TMJ2wgiYn-sy2MbI3E3Z" version="13.1.5" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
-    <mxGraphModel dx="1303" dy="728" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="782" dy="437" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -251,7 +251,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-84" value="Член предложения" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="1670" y="1130" width="120" height="60" as="geometry" />
+          <mxGeometry x="1670" y="1130" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-86" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;endArrow=classic;endFill=1;" parent="1" source="Er8K7lmykXEFfFOnpzie-85" target="Er8K7lmykXEFfFOnpzie-1" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -259,7 +259,7 @@
             <mxPoint x="1941" y="1179.9999999999998" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-87" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=classic;endFill=1;" parent="1" source="Er8K7lmykXEFfFOnpzie-85" target="Er8K7lmykXEFfFOnpzie-84" edge="1">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-87" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;endArrow=classic;endFill=1;" parent="1" source="Er8K7lmykXEFfFOnpzie-85" target="Er8K7lmykXEFfFOnpzie-84" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-88" value="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;" parent="Er8K7lmykXEFfFOnpzie-87" vertex="1" connectable="0">
@@ -284,7 +284,7 @@
           <mxGeometry x="1690" y="1060" width="100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-92" value="Название члена предложения" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1670" y="1214" width="120" height="46" as="geometry" />
+          <mxGeometry x="1670" y="1200" width="120" height="46" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-105" value="Граммема" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="1510" y="640" width="200" height="60" as="geometry" />
@@ -612,6 +612,28 @@
         </mxCell>
         <mxCell id="2KtH2uyn6P6ubnMdH-Oo-13" value="Название класса синтаксической группы" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="560" y="689" width="125" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="2KtH2uyn6P6ubnMdH-Oo-14" target="Er8K7lmykXEFfFOnpzie-105">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="2KtH2uyn6P6ubnMdH-Oo-14" target="Er8K7lmykXEFfFOnpzie-84">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="2KtH2uyn6P6ubnMdH-Oo-14">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1660" y="1140" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1610" y="1140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-19" value="М" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="2KtH2uyn6P6ubnMdH-Oo-18">
+          <mxGeometry x="0.6416" y="12" relative="1" as="geometry">
+            <mxPoint x="12" y="13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-14" value="Член предложения представлен" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1525" y="847.5" width="170" height="63.5" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
