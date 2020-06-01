@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2020-06-01T08:39:49.663Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="v5ExXhSTdXiD-46ESBNi" version="13.1.5" type="github">
+<mxfile host="app.diagrams.net" modified="2020-06-01T08:40:51.382Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="8qZJXCdIJnamqhU1xJ3L" version="13.1.5" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
-    <mxGraphModel dx="539" dy="301" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1303" dy="728" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -595,6 +595,23 @@
         </mxCell>
         <mxCell id="2KtH2uyn6P6ubnMdH-Oo-2" value="Имеет&lt;br&gt;класс" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="530" y="434" width="90" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-10" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="2KtH2uyn6P6ubnMdH-Oo-11" target="2KtH2uyn6P6ubnMdH-Oo-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="630" y="669" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-11" value="&lt;u&gt;ID вида синтаксической группы&lt;/u&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="485" y="639" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-12" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="2KtH2uyn6P6ubnMdH-Oo-13" target="2KtH2uyn6P6ubnMdH-Oo-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="713.8908729652653" y="907.7867965644007" as="sourcePoint" />
+            <mxPoint x="630" y="684" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2KtH2uyn6P6ubnMdH-Oo-13" value="Название вида синтаксической группы" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="575" y="689" width="110" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
