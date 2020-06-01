@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-06-01T12:26:44.178Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="dgvS06UVgkri2nps6a-h" version="13.1.5" type="github">
+<mxfile host="app.diagrams.net" modified="2020-06-01T12:47:21.422Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="pTvTVYpK0_pH9N6CtwHM" version="13.1.5" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
     <mxGraphModel dx="920" dy="514" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -674,7 +674,7 @@
         </mxCell>
         <mxCell id="2KtH2uyn6P6ubnMdH-Oo-36" value="М" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="2KtH2uyn6P6ubnMdH-Oo-31">
           <mxGeometry x="0.9131" y="-1" relative="1" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint y="16" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="2KtH2uyn6P6ubnMdH-Oo-27" value="2-я группа имеет тип" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
