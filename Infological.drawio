@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2020-06-05T10:16:24.401Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="g7OOpXZJKa-jsuXc6HQX" version="13.1.11" type="github">
+<mxfile host="app.diagrams.net" modified="2020-06-05T10:17:26.071Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="52oBntynbeF6t7Fenz4I" version="13.1.11" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
-    <mxGraphModel dx="920" dy="514" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1564" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -106,7 +106,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-29" value="Включает" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="840" y="780.5" width="80" height="50" as="geometry" />
+          <mxGeometry x="850" y="787.5" width="80" height="50" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-30" value="Правило" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="1117.5" y="445.5" width="120" height="60" as="geometry" />
@@ -293,7 +293,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-115" value="Реализует&lt;br&gt;функцию" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1708.33" y="270.5" width="120" height="60" as="geometry" />
+          <mxGeometry x="1708.33" y="274.75" width="120" height="50.5" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-124" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-122" target="Er8K7lmykXEFfFOnpzie-111" edge="1">
           <mxGeometry relative="1" as="geometry" />
