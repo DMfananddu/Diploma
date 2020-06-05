@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-06-05T10:07:57.154Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="ibMhKVT0LWSbc0opxoL3" version="13.1.11" type="github">
+<mxfile host="app.diagrams.net" modified="2020-06-05T10:08:12.130Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" etag="fSvTV0Bd_ZRJa9yNFfqz" version="13.1.11" type="github">
   <diagram id="3-n-2fktoO8qeBoUGsix" name="Page-1">
     <mxGraphModel dx="782" dy="437" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -233,10 +233,10 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-93" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-84" target="Er8K7lmykXEFfFOnpzie-91" edge="1">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-93" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-84" target="Er8K7lmykXEFfFOnpzie-91" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Er8K7lmykXEFfFOnpzie-94" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-84" target="Er8K7lmykXEFfFOnpzie-92" edge="1">
+        <mxCell id="Er8K7lmykXEFfFOnpzie-94" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="Er8K7lmykXEFfFOnpzie-84" target="Er8K7lmykXEFfFOnpzie-92" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Er8K7lmykXEFfFOnpzie-84" value="Член предложения" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1" parent="1" vertex="1">
