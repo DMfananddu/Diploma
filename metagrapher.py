@@ -33,7 +33,7 @@ class MetaVertex:
         self.meta_edges = meta_edges # набор метаребер метавершины (list адресов)
     
     def __str__(self):
-        res_str = f"Слово: {self.word}\tЧлен предложения: {self.attribute}\nТэг слова: {self.tag}\n"
+        res_str = f"Грамматическая основа: {self.word}\tЧлен предложения: {self.attribute}\tТэг: {self.tag}\n\n"
         # res_str += f"Содержимое рёбер метавершины:\n"
         # for key in self.edges:
             # res_str += f"Ребро связывает {key[0]} и {key[1]} слова предложения.\n"

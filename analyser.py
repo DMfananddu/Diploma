@@ -57,7 +57,6 @@ conn.close()
 
 
 def analyzeVarsForming(inputSentence, conjs, separators, sent_number, prgf_number, gbVars):
-    last_lex = inputSentence["lexems"][-1]
     start = 0
     finish = 0
     sent_atba = []
@@ -342,14 +341,16 @@ def syntaxAnalysis(words, conjs, separators, part_lexems, subj_idx, pred_idx, va
 def wordsAppending(part_vars, part_words, i, si, prgf_number, sent_number, part_number, var_number, actual_rule, ar_number, words_flags, main_words, subordinate_words, subj_idx, pred_idx):
     if actual_rule["Флаг согласования рода"] and part_vars[i].gender != part_vars[si].gender or actual_rule["Флаг согласования числа"] and part_vars[i].number != part_vars[si].number or actual_rule["Флаг согласования падежа"] and part_vars[i].case != part_vars[si].case:
         return False
+    # if not actual_rule["Флаг согласования падежа"] and part_vars[i].case and part_vars[si].case and (part_vars[i].case == part_vars[si].case):# or part_vars[i].case == "nomn" or part_vars[si].case == "nomn"):
+        # return False
     if actual_rule["ТИП ПЕРВОЙ СГ"] == 1:
-        if si == pred_idx or si == subj_idx:
+        if si == pred_idx or si == subj_idx:# or (part_vars[i].POS in {"VERB", "INFN"} and part_vars[si].case and part_vars[si].case not in {"ablt"}):#, "nomn"}):
             return False
         mw_idx = mainWordAppending(main_words, part_vars[i], part_words[i], prgf_number, sent_number, part_number, var_number, i, actual_rule["ВИД ПЕРВОЙ СГ"])
         subWordAppending(subordinate_words, part_vars[si], part_words[si], prgf_number, sent_number, part_number, var_number, si, actual_rule["ВИД ВТОРОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], ar_number, mw_idx)
         words_flags[si] = True
     else:
-        if i == pred_idx or i == subj_idx:
+        if i == pred_idx or i == subj_idx:# or (part_vars[si].POS in {"VERB", "INFN"} and part_vars[si].case and part_vars[i].case not in {"ablt"}):#, "nomn"}):
             return False
         mw_idx = mainWordAppending(main_words, part_vars[si], part_words[si], prgf_number, sent_number, part_number, var_number, si, actual_rule["ВИД ВТОРОЙ СГ"])
         subWordAppending(subordinate_words, part_vars[i], part_words[i], prgf_number, sent_number, part_number, var_number, i, actual_rule["ВИД ПЕРВОЙ СГ"], actual_rule["ПОДЧИНЕННЫЙ ЧЛЕН ПРЕДЛОЖЕНИЯ"], ar_number, mw_idx)
